@@ -43,12 +43,14 @@ INSTALLED_APPS = [
     'social_django',
     'render',
     'Auth42',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
 }
 
 MIDDLEWARE = [
@@ -151,7 +153,7 @@ EMAIL_HOST_PASSWORD = 'Umut2024!'
 
 
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.oauth.OAuth2',
+    # 'social_core.backends.oauth.OAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -162,3 +164,19 @@ LOGIN_REDIRECT_URL = '/home/'
 LOGOUT_REDIRECT_URL = '/Login/'
 
 SOCIAL_AUTH_42_REDIRECT_URI = 'http://localhost:8000/auth/login'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SECURE = True
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    # 'ROTATE_REFRESH_TOKENS': True,
+    # 'BLACKLIST_AFTER_ROTATION': True,
+}
+
+AUTH_USER_MODEL = 'accounts.User'

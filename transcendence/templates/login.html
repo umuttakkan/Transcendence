@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 {% load static %}
-
 <html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giriş Yap</title>
-</head>
-<body>
-	<div class="login-container">
-		<h1>Giriş Yap</h1>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Giriş Yap</title>
+    </head>
+    <body>
+        <div class="login-container">
+            <h1>Giriş Yap</h1>
         <form id="loginForm">
 			<div class="form-group">
 				<label for="email">E-posta:</label>
@@ -20,6 +19,7 @@
                 <input type="password" id="password" name="password" required>
             </div>
             <button type="submit">Giriş Yap</button>
+            <a href="{{ url }}" id="login42">42 Login</a>
         </form>
         <div id="error-message" class="error-message"></div>
     </div>

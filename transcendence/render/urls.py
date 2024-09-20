@@ -6,5 +6,5 @@ urlpatterns = [
     path('Register/', RegisterPageView.as_view(), name='Register'),
     path('2fa/', TwoFAView.as_view(), name='2fa'),
     path('home/', HomePageView.as_view(), name='Home'),
-    path('profile/<int:pk>/', ProfilePageView.as_view(), name='Profile'),
+    path('me/', ProfilePageView.as_view(), name='Profile'),
 ]

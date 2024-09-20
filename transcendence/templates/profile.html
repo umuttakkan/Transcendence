@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+{% load static %}
+
 <html>
 <head>
 	<title>User Profile</title>
@@ -25,5 +27,6 @@
 		<label for="phone">Phone:</label>
 		<span id="phone">{{ phone }}</span>
 	</div>
+	<script src="{% static 'js/profile.js' %}"> </script>
 </body>
 </html>

@@ -9,8 +9,10 @@ if (logoutButton) {
 	});
 }
 
-if (profileButton) {
-	profileButton.addEventListener('click', function() {
-		window.location.href = '/profile/';
-	});
-}
+
+
+const profile = document.getElementById('Profile')
+
+profile.addEventListener('click', function () {
+	window.location.href = '/me/'
+});

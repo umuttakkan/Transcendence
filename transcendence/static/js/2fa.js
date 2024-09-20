@@ -1,27 +1,61 @@
-const form = document.getElementById('2faForm');
+document.getElementById('verifyButton').addEventListener('click', verify2FACode);
 
-form.addEventListener('submit', (e) => {
+async function verify2FACode(event) {
+    event.preventDefault();
+    
+    const code = document.getElementById('code').value;
+    let accessToken = localStorage.getItem('access_token');
 
-	e.preventDefault();
+    const response = await fetch('http://127.0.0.1:8000/accounts/verify/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ code: code })
+    });
 
-	const code = document.getElementById('code').value;
+    if (response.status === 401) {
+        console.log('Access token süresi geçmiş');
+        const newAccessToken = await refreshAccessToken(); 
+        accessToken = newAccessToken.split("-")[0];
+        const refreshToken = newAccessToken.split("-")[1];
 
-	fetch('http://127.0.0.1:8000/accounts/verify/', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({
-			code: code,
-		}),
-	})
-	.then((response) => response.json())
-	.then((data) => {
-		console.log(data);
-		if (data.message == 'Success login') {
-			window.location.href = '/home/';
-		} else {
-			alert(data.message);
-		}
-	});
-});
+        localStorage.setItem('access_token', accessToken);
+        localStorage.setItem('refresh_token', refreshToken);
+        return verify2FACode(event); 
+    }
+
+    const data = await response.json();
+    if (data.message === 'Success login') {
+        console.log('2FA doğrulandı');
+        window.location.href = '/home/'; 
+    } else {
+        console.log(data.error);
+    }
+}
+
+
+function refreshAccessToken() {
+    const refreshToken = localStorage.getItem('refresh_token');
+    const response = fetch('http://127.0.0.1:8000/api/token/refresh/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            refresh_token: refreshToken
+        }),
+    });
+    
+    const data = response.json(); 
+    if (data.access_token) {
+        console.log('Access token yenilendi');
+        console.log(data.access_token);
+        console.log(data.refresh_token);
+        return data.access_token + "-" + data.refresh_token;
+    } else {
+        console.error('Token yenilenemedi', data);
+        throw new Error('Token yenilenemedi');
+    }
+}
