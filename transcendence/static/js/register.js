@@ -1,8 +1,12 @@
-const form = document.getElementById('registerForm');
 
-form.addEventListener('submit', (e) => {
-	e.preventDefault();
+console.log('js dosyası yüklendi');
 
+const button = document.getElementById('registerButton');
+button.addEventListener('click', registerForm);
+
+function registerForm(event){
+	event.preventDefault();
+	console.log('Form submitted');
 	const username = document.getElementById('username').value;
 	const firstName = document.getElementById('firstName').value;
 	const lastName = document.getElementById('lastName').value;
@@ -28,10 +32,18 @@ form.addEventListener('submit', (e) => {
 	})
 	.then((response) => response.json())
 	.then((data) => {
+		console.log('123123');
 		console.log(data);
-		if (data.id) {
-			window.location.href = '/Login/';
-		} else {
+		if (data.message =="Success registration") {
+			alert('Kayıt başarılı. Giriş yapabilirsiniz.Giris sayfasina yönlendiriliyorsunuz.');
+			const script = document.querySelector('script');
+			if (script)
+				document.body.removeChild(script);
+        	window.history.pushState({}, "", "/login/");
+			handleLocation();
+		} else 
+		{
+			console.log("Error");
 			alert(data.message);
 		}
 	})
@@ -39,4 +51,6 @@ form.addEventListener('submit', (e) => {
 		console.error('Error:', error);
 		alert('Bir hata oluştu. Lütfen tekrar deneyin.');
 	});
-});
+}
+
+// document.addEventListener('DOMContentLoaded', initRegister);

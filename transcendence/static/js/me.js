@@ -1,6 +1,5 @@
 const apiUrl = `http://127.0.0.1:8000/accounts/users/`;
 const accessToken = localStorage.getItem('access_token');
-console.log(accessToken);
 fetch(apiUrl, {
   method: 'GET',
   headers: {

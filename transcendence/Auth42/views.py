@@ -9,6 +9,11 @@ import requests
 from django.http import HttpResponse
 from accounts.models import User
 
+class Login42View(APIView):
+    def get(self, request):
+        url = f"https://api.intra.42.fr/oauth/authorize?client_id={settings.SOCIAL_AUTH_42_KEY}&redirect_uri=http://localhost:8000/auth/callback&response_type=code"
+        return Response({'url': url})
+        
 class Callback42View(APIView):
     def get(self, request):
         code = request.GET.get('code')

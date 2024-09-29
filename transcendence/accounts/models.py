@@ -12,7 +12,7 @@ class BaseUserManager(BaseUserManager):
         except ValidationError:
             raise ValidationError('Invalid email address')
             
-    def create_user(self, email, name, lastname, username, password, **extra_fields):
+    def create_user(self, email, name, lastname, username, password, phone,**extra_fields):
         if email:
             email = self.normalize_email(email)
             self.email_validator(email)
@@ -25,7 +25,7 @@ class BaseUserManager(BaseUserManager):
         if not username:
             raise ValueError('Username is required')
 
-        user = self.model(username=username, email=email, name=name, lastname=lastname)
+        user = self.model(username=username, email=email, name=name, lastname=lastname, phone=phone)
         user.set_password(password)
         user.save()
         print("bakalim sifreye ne oluyor")

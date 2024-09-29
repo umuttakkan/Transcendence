@@ -1,17 +1,6 @@
-<!DOCTYPE html>
-{% load static %}
-<html>
-<head>
-	<title>Two-Factor Authentication</title>
-</head>
-<body>
-	<h1>Two-Factor Authentication</h1>
-	
-	<form id="2faForm">
+<h1>Two-Factor Authentication</h1>
+	<form id="2faForm" action='#'>
 		<label for="verification_code">Enter the verification code:</label>
-		<input type="text" id="code" name="verification_code" required>
+		<input type="text" id="code">
 		<button id="verifyButton" type="button">Verify</button>
 	</form>
-	<script src="{% static 'js/2fa.js' %}"></script>
-</body>
-</html>

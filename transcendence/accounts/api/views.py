@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from rest_framework.views import APIView
 
 from django.contrib.auth import login as django_login
+from django.contrib.auth import logout
 from rest_framework import status
 from rest_framework.response import Response
 from django.utils import timezone
@@ -22,6 +23,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
+import json
 
 # def create_access_token(user):
 #     return jwt.encode({
@@ -141,6 +143,7 @@ class VerifyAPIView(generics.CreateAPIView):
     def post(self, request):
         print("girdi1111")
         serializer = self.serializer_class(data=request.data)
+        print(serializer)
         if serializer.is_valid():
             user_data = serializer.validated_data
             code = user_data['code']
@@ -190,4 +193,26 @@ class ProfileAPIView(generics.ListAPIView):
         except jwt.ExpiredSignatureError:
             return Response({'error': 'Token expired'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.InvalidTokenError:
+            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+
+class LogoutAPIView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = None
+    serializer_class = None
+
+    def post(self, request):
+        try:
+            print("girdi111111111111111111111")
+            print(request.headers)
+            data = json.loads(request.body)
+            refresh_token = data.get('refresh_token')
+            print(refresh_token)
+            if not refresh_token:
+                return Response({'error': 'Authorization header not found'}, status=status.HTTP_400_BAD_REQUEST)
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            logout(request)
+            return Response({'message': 'Success logout'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(f"Error occurred: {str(e)}")
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)

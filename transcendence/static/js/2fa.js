@@ -6,32 +6,42 @@ async function verify2FACode(event) {
     const code = document.getElementById('code').value;
     let accessToken = localStorage.getItem('access_token');
 
-    const response = await fetch('http://127.0.0.1:8000/accounts/verify/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ code: code })
-    });
+    try {
+        const response = await fetch('http://127.0.0.1:8000/accounts/verify/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({ code: code }),
+        });
 
-    if (response.status === 401) {
-        console.log('Access token süresi geçmiş');
-        const newAccessToken = await refreshAccessToken(); 
-        accessToken = newAccessToken.split("-")[0];
-        const refreshToken = newAccessToken.split("-")[1];
+        const data = await response.json(); 
 
-        localStorage.setItem('access_token', accessToken);
-        localStorage.setItem('refresh_token', refreshToken);
-        return verify2FACode(event); 
-    }
+        if (response.status === 401) {
+            console.log('Access token süresi geçmiş');
+            const newAccessToken = await refreshAccessToken();
+            accessToken = newAccessToken.split("-")[0];
+            const refreshToken = newAccessToken.split("-")[1];
 
-    const data = await response.json();
-    if (data.message === 'Success login') {
-        console.log('2FA doğrulandı');
-        window.location.href = '/home/'; 
-    } else {
-        console.log(data.error);
+            localStorage.setItem('access_token', accessToken);
+            localStorage.setItem('refresh_token', refreshToken);
+            return verify2FACode(event);
+        }
+
+        if (data.message === 'Success login') {
+            console.log('2FA doğrulandı');
+            window.history.pushState({}, "", "/home/");
+            handleLocation();
+        } 
+        else
+            console.log('Hata:', data.error);
+
+    } 
+    catch (error)
+    {
+        console.error('Bir hata oluştu:', error);
+        alert('Bir hata oluştu. Lütfen tekrar deneyin.');
     }
 }
 

@@ -51,7 +51,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
             lastname=validated_data['lastname'],
             username=validated_data['username'],
             password=validated_data['password'],
-            phone=validated_data.get('phone')  # Eğer phone opsiyonelse
+            phone=validated_data.get('phone')
         )
 
 class VerificationCodeSerializer(serializers.ModelSerializer):
