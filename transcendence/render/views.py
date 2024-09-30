@@ -10,6 +10,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 import json
 from rest_framework_simplejwt.tokens import RefreshToken
+from templates import *
+from static import *
 
 class SPAView(View):
     def get(self, request):
@@ -40,3 +42,11 @@ class HomePageView(View):
 class ProfilePageView(LoginRequiredMixin,View):
     def get(self, request):
         return render(request, 'profile.html')
+
+class PongPageView(View):
+    def get(self, request):
+        return render(request, 'Pong.html')
+
+class GameHomeView(View):
+    def get(self, request):
+        return render(request, 'game_home.html')
