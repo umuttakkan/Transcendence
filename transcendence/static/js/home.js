@@ -41,3 +41,12 @@ function profileButtonAction(event) {
 	window.history.pushState({}, "", "/me/");
 	handleLocation();
 }
+
+const gameButton = document.getElementById('gameButton');
+gameButton.addEventListener('click', gameButtonAction);
+
+function gameButtonAction(event) {
+    event.preventDefault();
+    window.history.pushState({}, "", "/game/");
+    handleLocation();
+}
