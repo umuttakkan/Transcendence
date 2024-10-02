@@ -1,5 +1,5 @@
-from render.views import LoginPageView, RegisterPageView, TwoFAView, HomePageView , ProfilePageView, ft_twoFAView
-from django.urls import path, re_path 
+from render.views import LoginPageView, RegisterPageView, TwoFAView, HomePageView , ProfilePageView, ft_twoFAView, GameHomeView
+from django.urls import path, re_path
 from render.views import SPAView
 
 urlpatterns = [
@@ -18,4 +18,5 @@ urlpatterns = [
     path('home/get-html/', HomePageView.as_view(), name='home'),
     path('me/get-html/', ProfilePageView.as_view(), name='profile'),
     path('mail/get-html/', ft_twoFAView.as_view(), name='mail'),
+    path('game/get-html/', GameHomeView.as_view(), name='game_home'),
 ]
