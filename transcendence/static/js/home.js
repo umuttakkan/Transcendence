@@ -34,11 +34,20 @@ async function logoutAction(event) {
 	}
 	catch(error)
 	{
-        console.error('Logout request failed:', error);
+		console.error('Logout request failed:', error);
 	}
 }
 
 function profileButtonAction(event) {
 	window.history.pushState({}, "", "/me/");
+	handleLocation();
+}
+
+const gameButton = document.getElementById('gameButton');
+gameButton.addEventListener('click', gameButtonAction);
+
+function gameButtonAction(event) {
+	event.preventDefault();
+	window.history.pushState({}, "", "/game/");
 	handleLocation();
 }

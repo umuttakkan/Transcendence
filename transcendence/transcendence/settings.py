@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'Auth42',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'Pong'
 ]
 
 REST_FRAMEWORK = {

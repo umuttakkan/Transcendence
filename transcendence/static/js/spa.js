@@ -6,6 +6,7 @@ const routes = {
     "/home/": "/home/",
     "/login-42/": "/login-42/",
     "/mail/": "/mail/",
+    "/game/": "/game/",
 };
 
 function getHtmlFile(route){
@@ -21,6 +22,8 @@ function getHtmlFile(route){
         return "/home/get-html/";
     else if (route ==="/mail/")
         return "/mail/get-html/";
+    else if(route === "/game/")
+        return "/game/get-html/";
     else
         return "/404/";
 }

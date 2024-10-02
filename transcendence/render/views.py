@@ -38,3 +38,11 @@ class ProfilePageView(View):
 class ft_twoFAView(View):
     def get(self, request):
         return render(request, 'mail.html')
+
+class PongPageView(View):
+    def get(self, request):
+        return render(request, 'Pong.html')
+
+class GameHomeView(View):
+    def get(self, request):
+        return render(request, 'game_home.html')

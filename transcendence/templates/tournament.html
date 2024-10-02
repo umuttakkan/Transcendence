@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Mode</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/pong.js' %}"></script>
+</head>
+<body>
+    <h1>TOURNAMENT MODE</h1>
+    <canvas id="pongCanvas"></canvas>
+    <ul>
+        <button><a href="{% url 'game_home' %}">Back</a></button>
+        <button><a href="{% url 'vspong' %}">Play</a></button>
+        <!-- startPongGame(); -->
+    <ul>
+</body>
+</html>
