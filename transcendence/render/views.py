@@ -10,8 +10,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 import json
 from rest_framework_simplejwt.tokens import RefreshToken
-from templates import *
-from static import *
 
 class SPAView(View):
     def get(self, request):
@@ -19,34 +17,24 @@ class SPAView(View):
 
 class LoginPageView(View):
     def get(self, request):
-        # state = secrets.token_urlsafe(16)
-        # url = f"https://api.intra.42.fr/oauth/authorize?client_id={settings.SOCIAL_AUTH_42_KEY}&redirect_uri=http://localhost:8000/auth/callback&response_type=code"
-        # response.set_cookie('state', state, httponly=True, samesite='Lax')
-        return render(request, 'login.html' )# ,{'url': url})
+        return render(request, 'login.html' )
 
 class RegisterPageView(View):
 	def get(self, request):
 		return render(request, 'register.html')
 
-class TwoFAView(LoginRequiredMixin,View):
+class TwoFAView(View):
     def get(self, request):
         return render(request, '2fa.html')
 
 class HomePageView(View):
-    # login_url = '/login/'
     def get(self, request):
-        user = request.user
-        # print(f"User: {request.user}, Authenticated: {request.user.is_authenticated}")
-        return render(request, 'home.html', {'user': user})
+        return render(request, 'home.html')
 
-class ProfilePageView(LoginRequiredMixin,View):
+class ProfilePageView(View):
     def get(self, request):
         return render(request, 'profile.html')
 
-class PongPageView(View):
+class ft_twoFAView(View):
     def get(self, request):
-        return render(request, 'Pong.html')
-
-class GameHomeView(View):
-    def get(self, request):
-        return render(request, 'game_home.html')
+        return render(request, 'mail.html')

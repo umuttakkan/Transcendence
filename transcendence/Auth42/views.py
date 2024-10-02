@@ -8,10 +8,11 @@ from rest_framework import status
 import requests
 from django.http import HttpResponse
 from accounts.models import User
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class Login42View(APIView):
     def get(self, request):
-        url = f"https://api.intra.42.fr/oauth/authorize?client_id={settings.SOCIAL_AUTH_42_KEY}&redirect_uri=http://localhost:8000/auth/callback&response_type=code"
+        url = f"https://api.intra.42.fr/oauth/authorize?client_id={settings.SOCIAL_AUTH_42_KEY}&redirect_uri=http://localhost:8000/ft_login/&response_type=code"
         return Response({'url': url})
         
 class Callback42View(APIView):
@@ -26,7 +27,7 @@ class Callback42View(APIView):
             'client_secret': settings.SOCIAL_AUTH_42_SECRET,
             'code': code,
             'state': state,
-            'redirect_uri': 'http://localhost:8000/auth/callback'
+            'redirect_uri': 'http://localhost:8000/ft_login/',
         }
         token_response = requests.post(token_url, data=data)
             
@@ -35,7 +36,7 @@ class Callback42View(APIView):
         
         access_token = token_response.json().get('access_token')
         refresh_token = token_response.json().get('refresh_token')
-        print(token_response.json())
+
         user_url = 'https://api.intra.42.fr/v2/me'
         headers = {'Authorization': f'Bearer {access_token}'}
         
@@ -56,10 +57,14 @@ class Callback42View(APIView):
             phone = user_data.get('phone'),
             # avatar=user_data.get('image_url'),
         )
+        refreshToken = RefreshToken.for_user(user)
+        accessToken = refreshToken.access_token
+
         return Response({
             'success': True,
             'message': 'Authentication successful',
-            'access_token': access_token
+            'access_token': str(accessToken),
+            'refresh_token': str(refreshToken),
         })
         
         

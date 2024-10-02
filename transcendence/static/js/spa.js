@@ -5,7 +5,7 @@ const routes = {
     "/me/": "/me/",
     "/home/": "/home/",
     "/login-42/": "/login-42/",
-    "/game/": "/game/",
+    "/mail/": "/mail/",
 };
 
 function getHtmlFile(route){
@@ -19,8 +19,8 @@ function getHtmlFile(route){
         return "/me/get-html/";
     else if (route === "/home/")
         return "/home/get-html/";
-    else if(route === "/game/")
-        return "/game/get-html/";
+    else if (route ==="/mail/")
+        return "/mail/get-html/";
     else
         return "/404/";
 }
@@ -52,9 +52,7 @@ const loadScript = async (scriptSrc) => {
         console.log('Error loading script:', error);
     }
 };
-const getBaseUrl = () => {
-    return window.location.protocol + '//' + window.location.host;
-};
+
 
 async function callback42() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -62,7 +60,7 @@ async function callback42() {
 
     if (code) {
         try {
-            const response = await fetch(`${getBaseUrl()}/auth/callback/?code=${code}`, {
+            const response = await fetch(`http://localhost:8000/auth/callback/?code=${code}`, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json'
@@ -78,45 +76,34 @@ async function callback42() {
             if (data.success) {
                 localStorage.setItem('access_token', data.access_token);
                 localStorage.setItem('refresh_token', data.refresh_token);
-                console.log('User data:', data.user);
-                history.pushState({}, "", "/home/");
-                await handleLocation();
+                history.pushState({}, "", "/mail/");
+                // history.pushState({}, "", "/home/");
+                handleLocation();
             } else {
                 console.error("Authentication failed:", data.error);
                 history.pushState({}, "", "/login/");
-                await handleLocation();
+                handleLocation();
             }
         } catch (error) {
             console.error("Error during callback:", error);
             history.pushState({}, "", "/login/");
-            await handleLocation();
+            handleLocation();
         }
     } else {
         console.error("No code found in URL");
         history.pushState({}, "", "/login/");
-        await handleLocation();
+        handleLocation();
     }
 }
 
 const handleLocation = async () => {
     let path = window.location.pathname;
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
 
-    if (path === "/auth/callback/" || (path === "/" && code)) {
-        await callback42();
-        return;
-    }
-    if (path === "/login-42/") {
-        try {
-            const response = await fetch(`${getBaseUrl()}/auth/ft_login/`);
-            const data = await response.json();
-            console.log('Data:', data);
-            window.location.href = data.url;
-            return;
-        } catch (error) {
-            console.error('Error:', error);
-        }
+    console.log("path : " , path);
+
+    if (path === "/ft_login/") {
+        console.log("ft_login girildi");
+        callback42();
         return;
     }
 
@@ -124,20 +111,19 @@ const handleLocation = async () => {
     if ((path === "/home/" || path === "/2fa/" || path === "/me/") && !access_token)
     {
         history.pushState({}, "", "/login/");
-        await handleLocation();
+        handleLocation();
         return;
     }
 
     if (path === "/")
         return ;
+
     const scriptSrc = `/static/js${path.slice(0, -1)}.js`;
     console.log("scriptsrc : " , scriptSrc);
-
 
     console.log('Current path:', path);
 
     const route = routes[path] || path;
-    
     const data = getHtmlFile(route);
 
 
@@ -153,8 +139,10 @@ const handleLocation = async () => {
             throw new Error('Network response was not ok');
         }
         const html = await response.text();
+        // console.log(response.text());
 
         console.log("123");
+        console.log('HTML:', html);
         document.getElementById("content").innerHTML = html;
         console.log("111");
         await loadScript(scriptSrc);
@@ -185,7 +173,7 @@ document.body.addEventListener('click', event => {
 });
 
 
-// window.routes = routes;
+window.routes = routes;
 
 window.addEventListener('popstate', handleLocation);
 

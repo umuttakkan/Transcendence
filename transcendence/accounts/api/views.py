@@ -13,9 +13,9 @@ from django.contrib.auth import logout
 from rest_framework import status
 from rest_framework.response import Response
 from django.utils import timezone
-from django.core.mail import send_mail
-import random
-import requests 
+
+import requests
+
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 
@@ -46,20 +46,7 @@ import json
 #     )
 
 
-def login_send_mail(user):
-    verification_code = random.randint(100000, 999999)
-    try:
-        send_mail(
-            'Login Verification Code',
-            f'Your verification code is {verification_code}',
-            settings.EMAIL_HOST_USER,
-            [user.email],
-            fail_silently=False,
-        )
-        return verification_code
-    except Exception as e:
-        print(f'Error: {e}')
-        return 0
+
 
 # class TokenRefreshAPIView(APIView):
 #     def post(self, request):
@@ -119,12 +106,13 @@ class LoginAPIView(generics.CreateAPIView):
                 print(verification_code)
             else:
                 print('Verification code is not valid')
-                verification_code = login_send_mail(user)
-                print(verification_code)
-                if verification_code:
+                response = requests.post("http://localhost:8000/twoFactor/sendMail/", json={'email': user.email})
+                if response.status_code == 200:
+                    verification_code = response.json().get('verification_code')
                     user_data = get_object_or_404(User, email=user.email)
                     verify = VerificationCode.objects.create(user=user_data, code=verification_code)
                     verify.save()
+                    print(verification_code)
                     print("asd")
                 else:
                     return Response({'error': 'Mail not sent'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -179,7 +167,6 @@ class ProfileAPIView(generics.ListAPIView):
             print("giridm")
             access_token = auth_header.split(' ')[1]
             payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms=['HS256'])
-            print(payload)
             user = User.objects.filter(id=payload['user_id']).first()
             if user is None:
                 return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
@@ -212,7 +199,9 @@ class LogoutAPIView(generics.CreateAPIView):
             token = RefreshToken(refresh_token)
             token.blacklist()
             logout(request)
-            return Response({'message': 'Success logout'}, status=status.HTTP_200_OK)
+            response = Response({'message': 'Success logout'}, status=status.HTTP_200_OK)
+            response.delete_cookie('sessionid')
+            return response
         except Exception as e:
             print(f"Error occurred: {str(e)}")
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)

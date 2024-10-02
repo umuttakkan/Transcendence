@@ -27,8 +27,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.api.urls')),
     path('auth/', include('Auth42.urls')),
+    path('twoFactor/', include('twoFactor.urls')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('', include('render.urls')),
-    path('game/', include('Pong.urls')),
 ]

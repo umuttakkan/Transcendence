@@ -28,7 +28,7 @@ async function loginForm(event) {
                 console.log('Giriş başarılı:', data);
                 localStorage.setItem('access_token', data.access_token);
                 localStorage.setItem('refresh_token', data.refresh_token);
-                history.pushState({}, "", "/2fa/");
+                window.history.pushState({}, "", "/2fa/");
                 handleLocation();
             } else {
                 showError(data.message || 'Giriş başarısız. Lütfen tekrar deneyin.');
@@ -56,7 +56,11 @@ login42.addEventListener('click', login42Form);
 function login42Form(event) {
     console.log('login42Form calisiyor');
     event.preventDefault();
-
-    history.pushState({}, "", "/login-42/");
-    handleLocation();
+    
+    fetch('http://localhost:8000/auth/ft_login/')
+    .then(response => response.json())
+    .then(data => {
+        window.location.href = data.url;
+    })
+    .catch(error => console.error('Error:', error));
 }

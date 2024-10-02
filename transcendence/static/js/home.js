@@ -23,6 +23,7 @@ async function logoutAction(event) {
 			console.log('Logout successful');
 			localStorage.removeItem('access_token');
 			localStorage.removeItem('refresh_token');
+			sessionStorage.clear();
 			window.history.pushState({}, "", "/login/");
 			handleLocation();
 		}
@@ -40,13 +41,4 @@ async function logoutAction(event) {
 function profileButtonAction(event) {
 	window.history.pushState({}, "", "/me/");
 	handleLocation();
-}
-
-const gameButton = document.getElementById('gameButton');
-gameButton.addEventListener('click', gameButtonAction);
-
-function gameButtonAction(event) {
-    event.preventDefault();
-    window.history.pushState({}, "", "/game/");
-    handleLocation();
 }
