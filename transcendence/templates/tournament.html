@@ -5,15 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tournament Mode</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <script src="{% static 'js/pong.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/modes.css' %}">
 </head>
 <body>
-    <h1>TOURNAMENT MODE</h1>
-    <canvas id="pongCanvas"></canvas>
+    <h1 class="neon-text">Tournament Mode</h1>
+    <img src="{% static 'images/tournament_mode.jpg' %}" alt="Pong Game" style="width:50%; height:auto;">
     <ul>
-        <button><a href="{% url 'game_home' %}">Back</a></button>
-        <button><a href="{% url 'vspong' %}">Play</a></button>
+        <button class="neon-text"><a href="{% url 'game_home' %}">Back</a></button>
+        <button class="neon-text"><a href="{% url 'vspong' %}">Play</a></button>
         <!-- startPongGame(); -->
     <ul>
 </body>
