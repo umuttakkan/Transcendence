@@ -16,7 +16,7 @@ class Pong(TemplateView):
 	template_name = 'tournament.html'
 
 class vspong(TemplateView):
-	template_name = 'play.html'
+	template_name = 'game.html'
 
 class MatchmakingAPIView(APIView):
 	permission_classes = [IsAuthenticated]

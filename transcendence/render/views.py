@@ -46,3 +46,11 @@ class PongPageView(View):
 class GameHomeView(View):
     def get(self, request):
         return render(request, 'game_home.html')
+
+class VsModView(View):
+    def get(self, request):
+        return render(request, 'vs.html')
+
+class TournamentView(View):
+    def get(self, request):
+        return render(request, 'tournament.html')

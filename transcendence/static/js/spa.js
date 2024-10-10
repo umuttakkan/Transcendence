@@ -7,6 +7,7 @@ const routes = {
     "/login-42/": "/login-42/",
     "/mail/": "/mail/",
     "/game/": "/game/",
+    "/vs_mode/": "/vs_mode/",
 };
 
 function getHtmlFile(route){
@@ -24,6 +25,8 @@ function getHtmlFile(route){
         return "/mail/get-html/";
     else if(route === "/game/")
         return "/game/get-html/";
+    else if(route === "/vs_mode/")
+        return "/vs_mode/get-html/";
     else
         return "/404/";
 }
@@ -169,6 +172,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.body.addEventListener('click', event => {
     console.log("yanlis yere girdim!");
+    const path = window.location.pathname;
+    console.log("path : " , path);
+    if(path === "/game/"){
+        console.log("event : " , event.target.innerHTML);
+        if (event.target.innerHTML === "Vs Mode") {
+            window.location.href = "vs_mode";
+        }
+        else if (event.target.innerHTML === "Tournament Mode") {
+            window.location.href = "tour_mode";
+        }
+    }
     if (event.target.matches('[data-link]')) {
         console.log("1111");
         event.preventDefault();
@@ -176,7 +190,6 @@ document.body.addEventListener('click', event => {
         handleLocation();
     }
 });
-
 
 window.routes = routes;
 
