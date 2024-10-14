@@ -6,6 +6,15 @@ from django.http import JsonResponse
 from .models import Match
 from .models import GamePlayHistory
 
+class Pongi(TemplateView):
+	template_name = 'vs.html'
+
+class Pong(TemplateView):
+	template_name = 'tournament.html'
+
+class vspong(TemplateView):
+	template_name = 'game.html'
+
 class GameHomeView(LoginRequiredMixin, TemplateView):
 	template_name = 'game_home.html'
 

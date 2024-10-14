@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/game.css' %}">
 </head>
 <body>
+    <button id="homeButton" type="button">Home</button>
     <h1>Welcome To The Game Section, {{ user.username }}!</h1>
     <div class="modes-section">
         <h2>Pong Game</h2>
@@ -33,6 +34,10 @@
 
         document.getElementById("tournamentButton").addEventListener("click", function() {
             window.location.href = "{% url 'tournament_mode' %}";
+        });
+
+        document.getElementById("homeButton").addEventListener("click", function() {
+            window.location.href = "{% url 'home' %}";
         });
     </script>
 </body>

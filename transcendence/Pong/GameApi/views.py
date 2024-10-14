@@ -9,15 +9,6 @@ from django.views.generic import TemplateView
 
 # @login_required
 
-class Pongi(TemplateView):
-	template_name = 'vs.html'
-
-class Pong(TemplateView):
-	template_name = 'tournament.html'
-
-class vspong(TemplateView):
-	template_name = 'game.html'
-
 class MatchmakingAPIView(APIView):
 	permission_classes = [IsAuthenticated]
 
@@ -49,15 +40,6 @@ class UpdateScoreAPIView(APIView):
 
 		game.save()
 		return Response({'Message': 'Score Updated!'}, status=status.HTTP_200_OK)
-
-# def update_score(request):
-#     if request.method == 'POST':
-#         user = request.user
-#         score = int(request.POST.get('score'))
-#         player_score, created = PlayerScore.objects.get_or_create(user=user)
-#         player_score.score = score
-#         player_score.save()
-#         return JsonResponse({'username': user.username, 'score': player_score.score})
 	
 class EndGameAPIView(APIView):
 	permission_classes = [IsAuthenticated]

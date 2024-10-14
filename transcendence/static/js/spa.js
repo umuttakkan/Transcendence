@@ -8,6 +8,7 @@ const routes = {
     "/mail/": "/mail/",
     "/game/": "/game/",
     "/vs_mode/": "/vs_mode/",
+    "/tour_mode/": "/tour_mode/",
 };
 
 function getHtmlFile(route){
@@ -25,8 +26,10 @@ function getHtmlFile(route){
         return "/mail/get-html/";
     else if(route === "/game/")
         return "/game/get-html/";
-    else if(route === "/vs_mode/")
-        return "/vs_mode/get-html/";
+    else if(route === "/game/vs_mode/")
+        return "/game/vs_mode/";
+    else if(route === "/game/tour_mode/")
+        return "/game/tour_mode/";
     else
         return "/404/";
 }
@@ -177,10 +180,22 @@ document.body.addEventListener('click', event => {
     if(path === "/game/"){
         console.log("event : " , event.target.innerHTML);
         if (event.target.innerHTML === "Vs Mode") {
-            window.location.href = "vs_mode";
+            // window.location.href = "vs_mode";
+            event.preventDefault();
+            history.pushState(null, null, "vs_mode/");
+            handleLocation();
         }
         else if (event.target.innerHTML === "Tournament Mode") {
-            window.location.href = "tour_mode";
+            // window.location.href = "tour_mode";
+            event.preventDefault();
+            history.pushState(null, null, "tour_name/");
+            handleLocation();
+        }
+        else if (event.target.innerHTML === "Home") {
+            // window.location.href = "home";
+            event.preventDefault();
+            history.pushState(null, null, "/home/");
+            handleLocation();
         }
     }
     if (event.target.matches('[data-link]')) {

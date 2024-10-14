@@ -9,7 +9,7 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
 scene.add(ambientLight);
 
 const pointLight = new THREE.PointLight(0xffffff, 1);
@@ -18,7 +18,7 @@ scene.add(pointLight);
 
 // Game objects
 const tableGeometry = new THREE.PlaneGeometry(10, 6);
-const tableMaterial = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
+const tableMaterial = new THREE.MeshPhongMaterial({ color: 0x0000ff });
 const table = new THREE.Mesh(tableGeometry, tableMaterial);
 scene.add(table);
 
@@ -55,10 +55,10 @@ document.addEventListener('keyup', onKeyUp);
 
 function onKeyDown(event) {
     switch (event.key) {
-        case 'ArrowUp':
+        case 'a':
             moveLeftPaddleUp = true;
             break;
-        case 'ArrowDown':
+        case 's':
             moveLeftPaddleDown = true;
             break;
     }
@@ -66,10 +66,10 @@ function onKeyDown(event) {
 
 function onKeyUp(event) {
     switch (event.key) {
-        case 'ArrowUp':
+        case 'a':
             moveLeftPaddleUp = false;
             break;
-        case 'ArrowDown':
+        case 's':
             moveLeftPaddleDown = false;
             break;
     }
@@ -83,6 +83,8 @@ function moveRightPaddle() {
         rightPaddle.position.add(paddleDown);
     }
 }
+
+let player1_score = 0, player2_score = 0;
 
 // Ball movement and collision detection
 function moveBall() {
@@ -103,8 +105,25 @@ function moveBall() {
 
     // Reset ball if it goes out of bounds
     if (ball.position.x < -5 || ball.position.x > 5) {
+        console.log(ball.position.x);
+        if(ball.position.x < -5){
+            player2_score++;
+        }
+        else{
+            player1_score++;
+        }
         ball.position.set(0, 0, 0);
         ballVelocity.x *= -1;
+        document.getElementById('1_score').innerText = player1_score;
+        document.getElementById('2_score').innerText = player2_score;
+        if(player1_score == 5){
+            alert("Player 1 Wins");
+            location.reload();
+        }
+        if(player2_score == 5){
+            alert("Player 2 Wins");
+            location.reload();
+        }
     }
 }
 
@@ -135,4 +154,13 @@ window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+function hideControls() {
+    const controls = document.getElementById('controls');
+    controls.classList.add('hidden');
+}
+
+window.addEventListener('load', () => {
+    setTimeout(hideControls, 3000); //disappear after 5 seconds
 });

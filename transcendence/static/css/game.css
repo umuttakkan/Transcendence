@@ -4,8 +4,8 @@ body {
     background: linear-gradient(to right, #ff9966, #ff5e62);
     color: #fff;
     text-align: center;
-    margin: 0;
-    padding: 20px;
+    margin: 15;
+    padding: 25px;
 }
 
 h1 {
@@ -37,9 +37,9 @@ h1 {
 
 .modes-section {
     background-color: rgba(255, 255, 255, 0.2);
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 40px;
+    padding: 7px;
+    border-radius: 7px;
+    margin-bottom: 35px;
 }
 
 .modes-section h2 {
@@ -60,5 +60,23 @@ button {
 }
 
 button:hover {
+    background-color: #ff9966;
+}
+
+#homeButton {
+    position: absolute;
+    top: 10px;   /* 20px space from right */
+    left: 10px;  /* 20px space from left */
+    background-color: #ff5e62;
+    color: white;
+    border: none;
+    padding: 8px 13px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#homeButton:hover {
     background-color: #ff9966;
 }
