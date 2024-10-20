@@ -71,5 +71,5 @@ class VerificationCode(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.expires_at and not self.pk:
-            self.expires_at = timezone.now() + timedelta(minutes=5)
+            self.expires_at = timezone.now() + timedelta(minutes=1)
         super().save(*args, **kwargs)

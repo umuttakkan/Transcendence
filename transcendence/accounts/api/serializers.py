@@ -23,7 +23,7 @@ class LoginSerializer(serializers.Serializer):
         user = authenticate(request, username=email, password=password)
         print(user)
         if user is None:
-            raise ValidationError('Invalid username or password')
+            raise ValidationError('Invalid email or password')
         return user
 
 class RegistrationSerializer(serializers.ModelSerializer):

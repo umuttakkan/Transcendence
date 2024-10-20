@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'Auth42',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-    'Pong'
+    'Pong',
+    'twoFactor',
 ]
 
 REST_FRAMEWORK = {
@@ -143,6 +144,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'mail.leyjon.com.tr'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
 EMAIL_PORT = 465
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
@@ -174,8 +177,8 @@ SESSION_COOKIE_SECURE = True
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
     'BLACKLIST_AFTER_ROTATION': True,
     # 'ROTATE_REFRESH_TOKENS': True,
