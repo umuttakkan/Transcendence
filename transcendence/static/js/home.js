@@ -68,7 +68,7 @@ gameButton.addEventListener('click', gameButtonAction);
 
 function gameButtonAction(event) {
 	event.preventDefault();
-	window.history.pushState({}, "", "/game/");
+	window.history.pushState({}, "", "/game_home/");
 	handleLocation();
 }
 

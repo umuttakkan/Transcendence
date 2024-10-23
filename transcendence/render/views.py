@@ -49,8 +49,12 @@ class GameHomeView(View):
 
 class VsModView(View):
     def get(self, request):
-        return render(request, 'vs.html')
+        return render(request, 'vs_mod.html')
 
 class TournamentView(View):
     def get(self, request):
         return render(request, 'tournament.html')
+
+class GameView(View):
+    def get(self, request):
+        return render(request, 'game.html')
