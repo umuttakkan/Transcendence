@@ -6,26 +6,37 @@
     <title>Game Home</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/game.css' %}">
+    <favicon href="{% static 'images/favicon.ico' %}">
 </head>
 <body>
+    <button id="homeButton" type="button">Home</button>
     <h1>Welcome To The Game Section, {{ user.username }}!</h1>
     <div class="modes-section">
         <h2>Pong Game</h2>
         <ul>
             <button id="vsButton" type="button">Vs Mode</button>
             <button id="tournamentButton" type="button">Tournament Mode</button>
+            <button id="playAgainButton" style="display: none;" onclick="restartGame()">Play Again</button>
         </ul>
     </div>
     <div class="profile-section">
         <h2>Your Game History</h2>
-        <ul>
-            {% for history in game_history %}
-                <li>{{ history.date }}: {{ history.result }} / {{ history.score }} Points</li>
-            {% empty %}
-                <li>No game history found.</li>
-            {% endfor %}
-        </ul>
+            <ul style="height: 300px; overflow-y: scroll;">
+                {% for history in game_history %}
+                    <li>{{ history.date|date:"M d, Y, H:i" }}:
+                        {% if history.result == 'Victory' %}
+                            <text class="victor">VICTORY</text>
+                        {% elif history.result == 'Defeat' %}
+                            <text class="loser">DEFEAT</text>
+                        {% else %}
+                            <text class="draw">DRAW</text>
+                        {% endif %} with {{ history.score1 }} vs {{history.score2}}</li>
+                {% empty %}
+                    <li>No game history found.</li>
+                {% endfor %}
+            </ul>
     </div>
+    <script src="path/to/game.js"></script>
     <script>
         document.getElementById("vsButton").addEventListener("click", function() {
             window.location.href = "{% url 'vs_mode' %}";
@@ -33,6 +44,10 @@
 
         document.getElementById("tournamentButton").addEventListener("click", function() {
             window.location.href = "{% url 'tournament_mode' %}";
+        });
+
+        document.getElementById("homeButton").addEventListener("click", function() {
+            window.location.href = "{% url 'home' %}";
         });
     </script>
 </body>

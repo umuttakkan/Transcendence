@@ -4,13 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pong Game</title>
-    <style>
-        body { margin: 0; }
-        canvas { display: block; }
-    </style>
+    <meta name="description" content="A 3D Pong game built with Three.js">
+    <title>3D Pong Game</title>
+    <link rel="stylesheet" href="{% static 'css/pong.css' %}">
 </head>
 <body>
+    <div id="game-container">
+        <div class="neon-text" id="score" aria-live="polite">
+            <text id="1_score">0</text> -
+            <text id="2_score">0</text>
+        </div>
+        <div id="controls">
+            <p>Controls: 'A' to move up, 'S' to move down</p>
+        </div>
+    </div>
+
     <script type="importmap">
         {
             "imports": {
@@ -19,7 +27,6 @@
             }
         }
     </script>
-    <!-- Statik dosya -->
     <script type="module" src="{% static 'js/game.js' %}"></script>
 </body>
 </html>

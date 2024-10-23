@@ -4,8 +4,8 @@ body {
     background: linear-gradient(to right, #ff9966, #ff5e62);
     color: #fff;
     text-align: center;
-    margin: 0;
-    padding: 20px;
+    margin: 15;
+    padding: 25px;
 }
 
 h1 {
@@ -26,9 +26,17 @@ h1 {
 }
 
 .profile-section ul {
-    list-style-type: none;
-    padding: 0;
+    max-height: 300px;
+    overflow-y: scroll;
+    padding: 10px;
+    /* border: 1px solid #cccccc1e; */
+    /* background-color: #f9f9f9; */
 }
+
+.profile-section ul li {
+    margin-bottom: 10px;
+}
+
 
 .profile-section li {
     font-size: 1.2rem;
@@ -37,9 +45,9 @@ h1 {
 
 .modes-section {
     background-color: rgba(255, 255, 255, 0.2);
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 40px;
+    padding: 7px;
+    border-radius: 7px;
+    margin-bottom: 35px;
 }
 
 .modes-section h2 {
@@ -61,4 +69,52 @@ button {
 
 button:hover {
     background-color: #ff9966;
+}
+
+#homeButton {
+    position: absolute;
+    top: 10px;   /* 20px space from right */
+    left: 10px;  /* 20px space from left */
+    background-color: #ff5e62;
+    color: white;
+    border: none;
+    padding: 8px 13px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#homeButton:hover {
+    background-color: #ff9966;
+}
+
+.victor {
+    color: #0c29d3;
+}
+
+.loser {
+    color: #e00f0f;
+}
+
+.draw {
+    color: #f0f00f;
+}
+
+#playAgainButton {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px 20px;
+    background-color: #282c34;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+#playAgainButton:hover {
+    background-color: #61dafb;
 }
