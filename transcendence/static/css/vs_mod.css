@@ -19,13 +19,14 @@ body {
     align-items: center;
     height: 100vh; /* 100 all page height */
     flex-direction: column;
+    align-items: center;
 }
 
 h1 {
     font-size: 5rem;
     color: #0d8abb;
-    /* color: #40f30ada; */
     margin-bottom: 20px;
+    text-align: center;
 }
 
 ul {
@@ -33,6 +34,8 @@ ul {
     padding: 0;
     display: flex;
     gap: 10px;
+    justify-content: center; /* centers buttons horizontal */
+    align-items: center; /* centers buttons horizontal */
 }
 
 button {
@@ -44,10 +47,19 @@ button {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    align-items: center;
+}
+
+.img {
+    width: 120%;
+    height: 120%;
+    object-fit: cover;
+    border-radius: 5px;
 }
 
 button:hover {
     background-color: #fcfcfc62;
+    
 }
 
 button a {

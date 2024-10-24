@@ -118,20 +118,22 @@ function moveBall() {
         ballVelocity.x *= -1;
         document.getElementById('1_score').innerText = player1_score;
         document.getElementById('2_score').innerText = player2_score;
+        const user1 = localStorage.getItem('username');
         if(player1_score == 2) // will be 5 in final version
         {
             alert("Player 1 Wins");
-            sendGameResult(player1_score, player2_score, 'umuttakkan', 'umuttakkan');
+            sendGameResult(player1_score, player2_score, user1, user1);
             // location.reload();
         }
         if(player2_score == 2) // will be 5 in final version
         {
             alert("Player 2 Wins");
-            sendGameResult(player1_score, player2_score, 'umuttakkan', 'umuttakkan');
+            sendGameResult(player1_score, player2_score, user1, user1);
             // location.reload();
         }
     }
 }
+// TODO: fix users: user2 is not defined
 
 // Animation loop
 function animate() {
