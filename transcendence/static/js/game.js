@@ -134,10 +134,10 @@ function moveBall() {
 // Animation loop
 function animate() {
     // console.log(player1_score, player2_score);
-    if(player1_score == 1 || player2_score == 1){
-        document.getElementById('playAgainButton').style.display = 'block';
-        return;
-    }
+    // if(player1_score == 2 || player2_score == 2){
+    //     document.getElementById('playAgainButton').style.display = 'block';
+    //     return;
+    // }
 
     requestAnimationFrame(animate);
 

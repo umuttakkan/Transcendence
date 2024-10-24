@@ -34,7 +34,7 @@ class GameHomeView(LoginRequiredMixin, TemplateView):
 				'score2': game.score2,
 				'result': 'Victory' if game.score1 > game.score2 else 'Draw' if game.score1 == game.score2 else 'Defeat',
 			})
-
+		print(user_game_history)
 		context['game_history'] = user_game_history
 		return context
 

@@ -16,13 +16,12 @@
         <ul>
             <button id="vsButton" type="button">Vs Mode</button>
             <button id="tournamentButton" type="button">Tournament Mode</button>
-            <button id="playAgainButton" style="display: none;" onclick="restartGame()">Play Again</button>
         </ul>
     </div>
     <div class="profile-section">
         <h2>Your Game History</h2>
-            <ul style="height: 300px; overflow-y: scroll;">
-                {% for history in game_history %}
+            <ul id="fokingamehistory" style="height: 300px; overflow-y: scroll;">
+                <!-- {% for history in game_history %}
                     <li>{{ history.date|date:"M d, Y, H:i" }}:
                         {% if history.result == 'Victory' %}
                             <text class="victor">VICTORY</text>
@@ -33,7 +32,7 @@
                         {% endif %} with {{ history.score1 }} vs {{history.score2}}</li>
                 {% empty %}
                     <li>No game history found.</li>
-                {% endfor %}
+                {% endfor %} -->
             </ul>
     </div>
     <script src="path/to/game.js"></script>
@@ -48,6 +47,31 @@
 
         document.getElementById("homeButton").addEventListener("click", function() {
             window.location.href = "{% url 'home' %}";
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            var fokingamehistory = document.getElementById("fokingamehistory");
+
+            // JSON veriyi güvenli bir şekilde Django'dan aktar
+            const username = "{{ user.username }}";
+            console.log(username);
+
+            const csrf=document.cookie.split('=')[1];
+            var myData = fetch("http://127.0.0.1:8000/game/match_results/"+username, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrf
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                for (var i = 0; i < data.length; i++) {
+                    var li = document.createElement("li");
+                    li.appendChild(document.createTextNode(data[i].date + ": " + data[i].result + " with " + data[i].score1 + " vs " + data[i].score2));
+                    fokingamehistory.appendChild(li);
+                }
+            })
         });
     </script>
 </body>

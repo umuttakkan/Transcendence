@@ -64,15 +64,20 @@ class EndGameAPIView(APIView):
 			return Response({'Message': 'The Game Is In A Draw!'}, status=status.HTTP_200_OK)
 
 class MatchResults(APIView):
+	# permission_classes = [IsAuthenticated]
 	@method_decorator(csrf_exempt)
-	def get(self, request):
+	def get(self, request, username):
 		if request.method == 'GET':
-			match_id = request.GET.get('match_id')
-			match = Match.objects.get(id=match_id)
-			return JsonResponse({'match_id': match.id, 'score1': match.score1, 'score2': match.score2}, status=200)
+			print(request.data)
+			# usernm = request.data.get('username')
+			usr = User.objects.get(username=username) # request.user
+			match = Match.objects.filter(user1=usr).order_by('-match_date')
+			li = [{'user1': i.user1.username, 'user2': i.user2, 'score1': i.score1, 'score2': i.score2, 'winner_name': i.winner_name} for i in match]
+			# match_list = list(match.values('user1', 'user2', 'score1', 'score2', 'winner_name'))
+			return JsonResponse({"data": li}, status=200)
 		return JsonResponse({'error': 'Invalid request method'}, status=400)
 
-	@method_decorator(csrf_exempt)
+	@method_decorator(csrf_exempt) #remove
 	def post(self, request):
 		if request.method == 'POST':
 			data = json.loads(request.body)
@@ -87,3 +92,4 @@ class MatchResults(APIView):
 			return JsonResponse({'status': 'Match result saved successfully', 'match_id': match.id}, status=200)
 
 		return JsonResponse({'error': 'Invalid request method'}, status=400)
+	# TODO: create a new api endpoint for saving match results
