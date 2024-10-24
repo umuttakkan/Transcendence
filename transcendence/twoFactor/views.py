@@ -11,6 +11,7 @@ import jwt
 
 def login_send_mail(email):
     verification_code = random.randint(100000, 999999)
+    print(email)
     try:
         send_mail(
             'Login Verification Code',

@@ -1,6 +1,6 @@
-import * as THREE from 'three';
+import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
 
-// Scene setup (unchanged)
+// Scene setup
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.z = 5;
@@ -37,19 +37,20 @@ const ballMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
 const ball = new THREE.Mesh(ballGeometry, ballMaterial);
 scene.add(ball);
 
-// Paddle movement (unchanged)
+// Paddle movement
 const paddleSpeed = 0.1;
 const paddleUp = new THREE.Vector3(0, paddleSpeed, 0);
 const paddleDown = new THREE.Vector3(0, -paddleSpeed, 0);
-
-let moveLeftPaddleUp = false;
-let moveLeftPaddleDown = false;
 
 // Ball movement
 let ballSpeed = 0.05;
 let ballVelocity = new THREE.Vector3(ballSpeed, ballSpeed, 0);
 
-// Keyboard event listeners (unchanged)
+let moveLeftPaddleUp = false;
+let moveLeftPaddleDown = false;
+
+
+// Keyboard event listeners
 document.addEventListener('keydown', onKeyDown);
 document.addEventListener('keyup', onKeyUp);
 
@@ -75,7 +76,7 @@ function onKeyUp(event) {
     }
 }
 
-// Simple AI for right paddle (unchanged)
+// Simple AI for right paddle
 function moveRightPaddle() {
     if (ball.position.y > rightPaddle.position.y) {
         rightPaddle.position.add(paddleUp);
@@ -85,6 +86,7 @@ function moveRightPaddle() {
 }
 
 let player1_score = 0, player2_score = 0;
+let animationId; // Animation ID
 
 // Ball movement and collision detection
 function moveBall() {
@@ -133,13 +135,7 @@ function moveBall() {
 
 // Animation loop
 function animate() {
-    // console.log(player1_score, player2_score);
-    // if(player1_score == 2 || player2_score == 2){
-    //     document.getElementById('playAgainButton').style.display = 'block';
-    //     return;
-    // }
-
-    requestAnimationFrame(animate);
+    animationId = requestAnimationFrame(animate);
 
     // Move left paddle based on user input
     if (moveLeftPaddleUp && leftPaddle.position.y < 2.5) {
@@ -220,3 +216,28 @@ function sendGameResult(score1, score2, user1Name, user2Name) {
         console.error('Error saving match result:', error);
     });
 }
+// Oyun sahnesini temizlemek için fonksiyon
+function cleanupGame() {
+    if (typeof renderer !== 'undefined') {
+        // Oyun canvas'ını DOM'dan kaldır
+        renderer.domElement.remove();
+
+        // Animasyon döngüsünü durdur (requestAnimationFrame'i iptal et)
+        if (typeof animationId !== 'undefined') {
+            cancelAnimationFrame(animationId);
+            animationId = undefined; // ID'yi sıfırla
+        }
+
+        // Three.js sahnesini temizle
+        while (scene.children.length > 0) { 
+            scene.remove(scene.children[0]); 
+        }
+
+        console.log("Oyun başarıyla temizlendi.");
+    }
+}
+
+// popstate olayını dinle
+window.addEventListener('popstate', () => {
+    cleanupGame();  // Geri tuşuna basıldığında oyunu temizle
+});

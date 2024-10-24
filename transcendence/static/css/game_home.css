@@ -1,0 +1,82 @@
+/* game.css */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #ff9966, #ff5e62);
+    color: #fff;
+    text-align: center;
+    margin: 15;
+    padding: 25px;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.profile-section {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 40px;
+}
+
+.profile-section h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.profile-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.profile-section li {
+    font-size: 1.2rem;
+    margin: 5px 0;
+}
+
+.modes-section {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 7px;
+    border-radius: 7px;
+    margin-bottom: 35px;
+}
+
+.modes-section h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+button {
+    background-color: #ff5e62;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    margin: 10px;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #ff9966;
+}
+
+#homeButton {
+    position: absolute;
+    top: 10px;   /* 20px space from right */
+    left: 10px;  /* 20px space from left */
+    background-color: #ff5e62;
+    color: white;
+    border: none;
+    padding: 8px 13px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#homeButton:hover {
+    background-color: #ff9966;
+}

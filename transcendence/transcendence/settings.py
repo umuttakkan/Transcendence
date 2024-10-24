@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'Auth42',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-    'Pong'
+    'Pong',
+    'twoFactor',
 ]
 
 REST_FRAMEWORK = {
@@ -144,6 +145,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'mail.leyjon.com.tr'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
 EMAIL_PORT = 465
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True

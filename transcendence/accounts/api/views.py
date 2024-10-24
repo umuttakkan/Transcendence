@@ -25,53 +25,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 import json
 
-# def create_access_token(user):
-#     return jwt.encode({
-#         'email': user.email,
-#         'exp': datetime.utcnow() + timedelta(minutes=60),
-#         'iat': datetime.utcnow()
-#     },
-#         settings.SECRET_KEY,
-#         algorithm='HS256'
-#     )
-
-# def create_refresh_token(user):
-#     return jwt.encode({
-#         'email': user.email,
-#         'exp': datetime.utcnow() + timedelta(days=1),
-#         'iat': datetime.utcnow()
-#     },
-#         settings.SECRET_KEY,
-#         algorithm='HS256'
-#     )
-
-
-
-
-# class TokenRefreshAPIView(APIView):
-#     def post(self, request):
-#         serializer = TokenRefreshSerializer(data=request.data)
-#         if serializer.is_valid():
-#             refresh_token = serializer.validated_data['refresh_token']
-#             try:
-#                 payload = jwt.decode(refresh_token, settings.SECRET_KEY, algorithms=['HS256'])
-#                 user = User.objects.get(email=payload['email'])
-#                 new_access_token = create_access_token(user)
-#                 new_refresh_token = create_refresh_token(user)
-#                 return Response({
-#                     'access_token': new_access_token,
-#                     'refresh_token': new_refresh_token
-#                 }, status=status.HTTP_200_OK)
-#             except jwt.ExpiredSignatureError:
-#                 return Response({'error': 'Refresh token expired'}, status=status.HTTP_400_BAD_REQUEST)
-#             except jwt.InvalidTokenError:
-#                 return Response({'error': 'Invalid refresh token'}, status=status.HTTP_400_BAD_REQUEST)
-#             except User.DoesNotExist:
-#                 return Response({'error': 'User not found'}, status=status.HTTP_400_BAD_REQUEST)
-        
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    
 class RegistrationAPIView(generics.CreateAPIView):
     queryset = None
     serializer_class = RegistrationSerializer
@@ -139,13 +92,14 @@ class VerifyAPIView(generics.CreateAPIView):
             verification = VerificationCode.objects.filter(code=code, used=False, expires_at__gt=timezone.now()).first()
             
             print(f"Verification object: {verification}")
-
-            if verification and verification.is_valid():
-                print("girdi2")
-                verification.used = True
-                verification.save()
-                return Response({'message': 'Success login'})
-            return Response({'error': 'Invalid code'}, status=status.HTTP_400_BAD_REQUEST)
+            if verification:
+                if verification.is_valid():
+                    print("girdi2")
+                    verification.used = True
+                    verification.save()
+                    return Response({'message': 'Success login'})
+                return Response({'error': 'Invalid code'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Code not found'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'error': 'Invalid data'}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -189,13 +143,8 @@ class LogoutAPIView(generics.CreateAPIView):
 
     def post(self, request):
         try:
-            print("girdi111111111111111111111")
-            print(request.headers)
             data = json.loads(request.body)
             refresh_token = data.get('refresh_token')
-            print(refresh_token)
-            if not refresh_token:
-                return Response({'error': 'Authorization header not found'}, status=status.HTTP_400_BAD_REQUEST)
             token = RefreshToken(refresh_token)
             token.blacklist()
             logout(request)
@@ -203,5 +152,4 @@ class LogoutAPIView(generics.CreateAPIView):
             response.delete_cookie('sessionid')
             return response
         except Exception as e:
-            print(f"Error occurred: {str(e)}")
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)

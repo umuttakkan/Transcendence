@@ -1,14 +1,14 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A 3D Pong game built with Three.js">
-    <title>3D Pong Game</title>
-    <link rel="stylesheet" href="{% static 'css/pong.css' %}">
-</head>
-<body>
+{% comment %} {% load static %} {% endcomment %}
+{% comment %} <!DOCTYPE html> {% endcomment %}
+{% comment %} <html lang="en"> {% endcomment %}
+{% comment %} <head> {% endcomment %}
+    {% comment %} <meta charset="UTF-8"> {% endcomment %}
+    {% comment %} <meta name="viewport" content="width=device-width, initial-scale=1.0"> {% endcomment %}
+    {% comment %} <meta name="description" content="A 3D Pong game built with Three.js"> {% endcomment %}
+    {% comment %} <title>3D Pong Game</title> {% endcomment %}
+    {% comment %} <link rel="stylesheet" href="{% static 'css/pong.css' %}"> {% endcomment %}
+{% comment %} </head>
+<body> {% endcomment %}
     <div id="game-container">
         <div class="neon-text" id="score" aria-live="polite">
             <text id="1_score">0</text> -
@@ -20,14 +20,14 @@
         <button id="playAgainButton" style="display: none;" onclick="restartGame()">Play Again</button>
     </div>
 
-    <script type="importmap">
+    {% comment %} <script type="importmap">
         {
             "imports": {
                 "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
                 "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
             }
         }
-    </script>
-    <script type="module" src="{% static 'js/game.js' %}"></script>
-</body>
-</html>
+    </script> {% endcomment %}
+    {% comment %} <script type="module" src="{% static 'js/game.js' %}"></script> {% endcomment %}
+{% comment %} </body> {% endcomment %}
+{% comment %} </html> {% endcomment %}

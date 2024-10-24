@@ -7,6 +7,7 @@ const routes = {
     "/login-42/": "/login-42/",
     "/mail/": "/mail/",
     "/game/": "/game/",
+    "/game_home/": "/game_home/",
     "/vs_mode/": "/vs_mode/",
     "/tour_mode/": "/tour_mode/",
 };
@@ -24,6 +25,12 @@ function getHtmlFile(route){
         return "/home/get-html/";
     else if (route ==="/mail/")
         return "/mail/get-html/";
+    else if(route === "/game_home/")
+        return "/game_home/get-html/";
+    else if(route === "/vs_mod/")
+        return "/vs_mod/get-html/";
+    else if(route === "/tournament/")
+        return "/tournament/get-html/";
     else if(route === "/game/")
         return "/game/get-html/";
     else if(route === "/game/vs_mode/")
@@ -45,6 +52,13 @@ function getHtmlFile(route){
 //     });
 // };
 
+const removeOldStylesheets = () => {
+    document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+        document.head.removeChild(link);
+    });
+    console.log("remove oldstylesheet calisiyor");
+};
+
 const loadScript = async (scriptSrc) => {
     try {
         const response = await fetch(scriptSrc);
@@ -52,11 +66,27 @@ const loadScript = async (scriptSrc) => {
             throw new Error('Network response was not ok');
 
         const scriptText = await response.text();
-        // console.log('Script text:', scriptText);
         const script = document.createElement('script');
         script.type = 'module';
         script.textContent = scriptText;
         document.body.appendChild(script);
+        if (scriptSrc.slice(11, -3) == "game" || scriptSrc.slice(11, -3) == "tournament" || scriptSrc.slice(11, -3) == "vs_mod" || scriptSrc.slice(11, -3) == "game_home" )
+        {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            if (scriptSrc.slice(11, -3) == "tournament")
+                link.href = '/static/css/vs_mod.css';
+            else
+            {
+                link.href = '/static/css/'+scriptSrc.slice(11, -3)+'.css';
+                console.log("else girdim")
+            }
+            document.head.appendChild(link);
+            console.log(scriptSrc);
+        }
+        else
+            if (document.querySelector('link'))
+                document.head.removeChild(document.querySelector('link'));
     } catch (error) {
         console.log('Error loading script:', error);
     }
@@ -108,10 +138,8 @@ async function callback42() {
 const handleLocation = async () => {
     let path = window.location.pathname;
 
-    console.log("path : " , path);
 
     if (path === "/ft_login/") {
-        console.log("ft_login girildi");
         callback42();
         return;
     }
@@ -128,15 +156,11 @@ const handleLocation = async () => {
         return ;
 
     const scriptSrc = `/static/js${path.slice(0, -1)}.js`;
-    console.log("scriptsrc : " , scriptSrc);
 
-    console.log('Current path:', path);
 
     const route = routes[path] || path;
     const data = getHtmlFile(route);
 
-
-    console.log('Current route:', data);
     try {
         const response = await fetch(data ,{
             method: 'GET',
@@ -148,14 +172,10 @@ const handleLocation = async () => {
             throw new Error('Network response was not ok');
         }
         const html = await response.text();
-        // console.log(response.text());
-
-        console.log("123");
-        console.log('HTML:', html);
         document.getElementById("content").innerHTML = html;
+        
         changeLanguage(currentLanguage);
-
-        console.log("111");
+        removeOldStylesheets();
         await loadScript(scriptSrc);
 
     } catch (error) {
@@ -208,7 +228,17 @@ document.body.addEventListener('click', event => {
 
 window.routes = routes;
 
-window.addEventListener('popstate', handleLocation);
+window.addEventListener('popstate', locationVerify);
+
+function locationVerify() {
+    const login = localStorage.getItem('login');
+    const twofa = localStorage.getItem('2fa');
+    const path = window.location.pathname;
+    if (path === "/2fa/" && twofa) {
+        history.pushState({}, "", "/home/");
+    }
+    handleLocation();
+}
 
 handleLocation();
 
@@ -233,6 +263,7 @@ const translations = {
         verification_code: "Your verification code is",
         password: "Password",
         confirm_password: "Confirm Password",
+        Game: "Game",
         // Add more translations as needed
     },
     tr: {
@@ -255,6 +286,7 @@ const translations = {
         verification_code: "Doğrulama kodunuz",
         password: "Şifre",
         confirm_password: "Şifreyi Onayla",
+        Game: "Oyun",
         // Add more translations as needed
     },
     fr: {
@@ -277,7 +309,7 @@ const translations = {
         verification_code: "Votre code de vérification est",
         password: "Mot de passe",
         confirm_password: "Confirmez le mot de passe",
-
+        Game: "Jeu",
     },
 };
 
@@ -288,7 +320,7 @@ window.changeLanguage = changeLanguage;
 function changeLanguage(language) {
     currentLanguage = language;
     const elementsToTranslate = document.querySelectorAll("[data-translate]");
-
+    localStorage.setItem('currentLanguage', currentLanguage);
     elementsToTranslate.forEach(element => {
         const key = element.getAttribute("data-translate");
         if (translations[language][key]) {
@@ -296,3 +328,4 @@ function changeLanguage(language) {
         }
     });
 }
+

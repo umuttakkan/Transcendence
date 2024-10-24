@@ -13,7 +13,7 @@ from Pong.models import User
 # @login_required
 
 class MatchmakingAPIView(APIView):
-	permission_classes = [IsAuthenticated]
+	# permission_classes = [IsAuthenticated]
 
 	def post(self, request):
 		user = request.user
@@ -30,7 +30,7 @@ class MatchmakingAPIView(APIView):
 			# return render(request, 'pong.html')
 
 class UpdateScoreAPIView(APIView):
-	permission_classes = [IsAuthenticated]
+	# permission_classes = [IsAuthenticated]
 
 	def post(self, request, game_id):
 		game = get_object_or_404(Match, id=game_id, is_active=True)
@@ -45,7 +45,7 @@ class UpdateScoreAPIView(APIView):
 		return Response({'Message': 'Score Updated!'}, status=status.HTTP_200_OK)
 	
 class EndGameAPIView(APIView):
-	permission_classes = [IsAuthenticated]
+	# permission_classes = [IsAuthenticated]
 
 	def post(self, request, game_id):
 		game = get_object_or_404(Match, id=game_id, is_active=True)
