@@ -44,7 +44,7 @@ class LoginAPIView(generics.CreateAPIView):
         serializer = self.serializer_class(data=request.data, context={'request': request})
         if serializer.is_valid():
             user = serializer.validated_data
-            
+            user_data = None
             # access_token = create_access_token(user)
             # refresh_token = create_refresh_token(user)
             refresh_token = RefreshToken.for_user(user)
@@ -73,6 +73,7 @@ class LoginAPIView(generics.CreateAPIView):
             return Response({
                 'refresh_token': str(refresh_token),
                 'access_token': str(access_token),
+                'username': user_data.username,
             }, status=status.HTTP_200_OK)
         return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 

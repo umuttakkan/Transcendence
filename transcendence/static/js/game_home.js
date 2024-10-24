@@ -13,13 +13,29 @@ document.getElementById("homeButton").addEventListener("click", function() {
 	handleLocation();
 });
 
+	const fokingamehistory = document.getElementById("fokingamehistory");
+	const username = localStorage.getItem('username');
+	console.log(username);
 
-const points = document.getElementById("points");
-
-function apiCall() {
-	fetch("/api/get_points/")
-		.then(response => response.json())
-		.then(data => {
-			points.innerHTML = data.points;
-		});
-}
+	const csrf=document.cookie.split('=')[1];
+	var myData = fetch("http://127.0.0.1:8000/game/match_results/"+username, {
+		method: "GET",
+		headers: {
+			"Content-Type": "application/json",
+			"X-CSRFToken": csrf
+		}
+	})
+	.then(response => response.json())
+	.then(data => {
+		if (!data)
+		{
+			console.log("No data");
+			return;
+		}
+		console.log(data.data[0]);
+		for (var i = 0; i < data.data.length; i++) {
+			var li = document.createElement("li");
+			li.appendChild(document.createTextNode(data.data[i]['user1'] + " vs " + data.data[i]['user2']+ " " + data.data[i]['score1']+ " vs " + data.data[i]['score2']));
+			fokingamehistory.appendChild(li);
+		}
+	})

@@ -6,6 +6,7 @@ profileButton.addEventListener('click', profileButtonAction);
 const refresh_token = localStorage.getItem('refresh_token');
 const access_token = localStorage.getItem('access_token');
 
+
 async function logoutAction(event) {
 	event.preventDefault();
 	try{

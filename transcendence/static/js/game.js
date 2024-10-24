@@ -121,13 +121,13 @@ function moveBall() {
         if(player1_score == 2) // will be 5 in final version
         {
             alert("Player 1 Wins");
-            sendGameResult(player1_score, player2_score);
+            sendGameResult(player1_score, player2_score, 'umuttakkan', 'umuttakkan');
             // location.reload();
         }
         if(player2_score == 2) // will be 5 in final version
         {
             alert("Player 2 Wins");
-            sendGameResult(player1_score, player2_score);
+            sendGameResult(player1_score, player2_score, 'umuttakkan', 'umuttakkan');
             // location.reload();
         }
     }
@@ -200,7 +200,7 @@ function sendGameResult(score1, score2, user1Name, user2Name) {
     };
     const csrf=document.cookie.split('=')[1];
 
-    fetch('http://localhost:8000/game/match_results/', {
+    fetch('http://localhost:8000/game/match_results_post/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -215,7 +215,12 @@ function sendGameResult(score1, score2, user1Name, user2Name) {
     .catch(error => {
         console.error('Error saving match result:', error);
     });
+    cleanupGame();
+    window.history.pushState({}, "", "/game_home/");
+    handleLocation();
 }
+
+
 // Oyun sahnesini temizlemek için fonksiyon
 function cleanupGame() {
     if (typeof renderer !== 'undefined') {

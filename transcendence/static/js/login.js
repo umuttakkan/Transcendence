@@ -43,6 +43,7 @@ async function loginForm(event) {
             console.log('Giriş başarılı:', data);
             localStorage.setItem('access_token', data.access_token);
             localStorage.setItem('refresh_token', data.refresh_token);
+            localStorage.setItem('username', data.username);
             window.history.pushState({}, "", "/2fa/");
             handleLocation();
         }  else {
