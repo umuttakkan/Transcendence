@@ -5,8 +5,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from Pong.models import Match
 from django.views.generic import TemplateView
-# from django.contrib.auth.decorators import login_required
-
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+import json
+from Pong.models import User
 # @login_required
 
 class MatchmakingAPIView(APIView):
@@ -59,3 +62,34 @@ class EndGameAPIView(APIView):
 			return Response({'Message': f'{winner.username} Wins!'}, status=status.HTTP_200_OK)
 		else:
 			return Response({'Message': 'The Game Is In A Draw!'}, status=status.HTTP_200_OK)
+
+class MatchResults(APIView):
+	# permission_classes = [IsAuthenticated]
+	@method_decorator(csrf_exempt)
+	def get(self, request, username):
+		if request.method == 'GET':
+			print(request.data)
+			# usernm = request.data.get('username')
+			usr = User.objects.get(username=username) # request.user
+			match = Match.objects.filter(user1=usr).order_by('-match_date')
+			li = [{'user1': i.user1.username, 'user2': i.user2, 'score1': i.score1, 'score2': i.score2, 'winner_name': i.winner_name} for i in match]
+			# match_list = list(match.values('user1', 'user2', 'score1', 'score2', 'winner_name'))
+			return JsonResponse({"data": li}, status=200)
+		return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+	@method_decorator(csrf_exempt) #remove
+	def post(self, request):
+		if request.method == 'POST':
+			data = json.loads(request.body)
+			score1 = data.get('score1')
+			score2 = data.get('score2')
+			user1 = User.objects.get(username="Anakin") # request.user
+			user2 = User.objects.get(username="Anakin")
+
+			# Match modeline sonucu kaydet
+			match = Match.objects.create(user1=user1, user2=user2, score1=score1, score2=score2)
+
+			return JsonResponse({'status': 'Match result saved successfully', 'match_id': match.id}, status=200)
+
+		return JsonResponse({'error': 'Invalid request method'}, status=400)
+	# TODO: create a new api endpoint for saving match results

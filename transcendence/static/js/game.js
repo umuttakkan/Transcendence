@@ -110,28 +110,25 @@ function moveBall() {
         console.log(ball.position.x);
         if(ball.position.x < -5){
             player2_score++;
-        } else {
+        }
+        else{
             player1_score++;
         }
         ball.position.set(0, 0, 0);
         ballVelocity.x *= -1;
-
-        // DOM elementleri mevcut mu kontrol et
-        const score1 = document.getElementById('1_score');
-        const score2 = document.getElementById('2_score');
-        
-        if (score1 && score2) {  // Eğer DOM'da mevcutsa
-            score1.innerText = player1_score;
-            score2.innerText = player2_score;
-        }
-
-        if(player1_score == 5){
+        document.getElementById('1_score').innerText = player1_score;
+        document.getElementById('2_score').innerText = player2_score;
+        if(player1_score == 2) // will be 5 in final version
+        {
             alert("Player 1 Wins");
-            location.reload();
+            sendGameResult(player1_score, player2_score);
+            // location.reload();
         }
-        if(player2_score == 5){
+        if(player2_score == 2) // will be 5 in final version
+        {
             alert("Player 2 Wins");
-            location.reload();
+            sendGameResult(player1_score, player2_score);
+            // location.reload();
         }
     }
 }
@@ -156,9 +153,29 @@ function animate() {
 
     renderer.render(scene, camera);
 }
+
 animate();
 
-// Handle window resizing
+function restartGame() {
+    // reset scores
+    player1_score = 0;
+    player2_score = 0;
+
+    // reset paddle positions
+    leftPaddle.position.set(leftPaddleInitialPosition.x, leftPaddleInitialPosition.y, leftPaddleInitialPosition.z);
+    rightPaddle.position.set(rightPaddleInitialPosition.x, rightPaddleInitialPosition.y, rightPaddleInitialPosition.z);
+    ball.position.set(ballInitialPosition.x, ballInitialPosition.y, ballInitialPosition.z);
+
+    // reset ball velocity
+    ballVelocity.set(ballInitialVelocity.x, ballInitialVelocity.y, ballInitialVelocity.z);
+
+    // hiding button
+    document.getElementById('playAgainButton').style.display = 'none';
+
+    animate();
+}
+
+// Handle window resizing (unchanged)
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -174,6 +191,31 @@ window.addEventListener('load', () => {
     setTimeout(hideControls, 3000); //disappear after 3 seconds
 });
 
+function sendGameResult(score1, score2, user1Name, user2Name) {
+    const data = {
+        score1: score1,
+        score2: score2,
+        usr1: user1Name,
+        usr2: user2Name
+    };
+    const csrf=document.cookie.split('=')[1];
+
+    fetch('http://localhost:8000/game/match_results/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrf,
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(result => {
+        console.log('Match result:', result, result.status, result['match_id']);
+    })
+    .catch(error => {
+        console.error('Error saving match result:', error);
+    });
+}
 // Oyun sahnesini temizlemek için fonksiyon
 function cleanupGame() {
     if (typeof renderer !== 'undefined') {

@@ -6,10 +6,10 @@ const routes = {
     "/home/": "/home/",
     "/login-42/": "/login-42/",
     "/mail/": "/mail/",
-    "game/": "/game/",
+    "/game/": "/game/",
     "/game_home/": "/game_home/",
-    "/vs_mod/": "/vs_mod/",
-    "/tournament/": "/tournament/",
+    "/vs_mode/": "/vs_mode/",
+    "/tour_mode/": "/tour_mode/",
 };
 
 function getHtmlFile(route){
@@ -33,6 +33,10 @@ function getHtmlFile(route){
         return "/tournament/get-html/";
     else if(route === "/game/")
         return "/game/get-html/";
+    else if(route === "/game/vs_mode/")
+        return "/game/vs_mode/";
+    else if(route === "/game/tour_mode/")
+        return "/game/tour_mode/";
     else
         return "/404/";
 }
