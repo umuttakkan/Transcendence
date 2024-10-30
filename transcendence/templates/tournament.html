@@ -1,19 +1,7 @@
-{% comment %} <!DOCTYPE html> {% endcomment %}
-{% comment %} <html lang="en"> {% endcomment %}
-{% comment %} <head> {% endcomment %}
-    {% comment %} <meta charset="UTF-8"> {% endcomment %}
-    {% comment %} <meta name="viewport" content="width=device-width, initial-scale=1.0"> {% endcomment %}
-    {% comment %} <title>Tournament Mode</title> {% endcomment %}
-    {% load static %}
-    {% comment %} <link rel="stylesheet" href="{% static 'css/modes.css' %}"> {% endcomment %}
-{% comment %} </head> {% endcomment %}
-{% comment %} <body> {% endcomment %}
-    <h1 class="neon-text">Tournament Mode</h1>
-    <img src="{% static 'images/tournament_mode.jpg' %}" alt="Pong Game" style="width:50%; height:auto;">
+{% load static %}
+    <h1 class="neon-text" style="font-size: 4rem;">Tournament Mode</h1>
+    <img src="{% static 'images/tournament_mode.jpg' %}" alt="Pong Game" style="width:130%; height:auto;">
     <ul>
-        <button class="neon-text" id='backHome'>Back</button>
-        <button class="neon-text" id='Play'>Play</button>
-        <!-- startPongGame(); -->
-    <ul>
-{% comment %} </body> {% endcomment %}
-{% comment %} </html> {% endcomment %}
+        <li><button class="neon-text" id='backHome'>Back</a></button></li>
+        <li><button class="neon-text" id='Play'>Play</a></button></li>
+    </ul>

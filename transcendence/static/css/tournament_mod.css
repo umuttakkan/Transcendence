@@ -17,15 +17,15 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* 100 all page height */
+    height: 80vh; /* Daha az bir yükseklik belirleyin */
     flex-direction: column;
 }
 
-h1 {
-    font-size: 6rem;
+/* h1 {
+    font-size: 5rem;
     margin-bottom: 20px;
     text-align: center;
-}
+} */
 
 ul {
     list-style: none;
