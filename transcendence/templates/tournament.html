@@ -1,7 +1,12 @@
 {% load static %}
-    <h1 class="neon-text" style="font-size: 4rem;">Tournament Mode</h1>
-    <img src="{% static 'images/tournament_mode.jpg' %}" alt="Pong Game" style="width:130%; height:auto;">
-    <ul>
-        <li><button class="neon-text" id='backHome'>Back</a></button></li>
-        <li><button class="neon-text" id='Play'>Play</a></button></li>
-    </ul>
+<h1 class="neon-text" style="font-size: 4rem;">Tournament Mode</h1>
+<img src="{% static 'images/tournament_mode.jpg' %}" alt="Pong Game" style="width:130%; height:auto;">
+<form id="tournamentForm">
+    <input type="text" id="username1" placeholder="Enter Username 1" required>
+    <input type="text" id="username2" placeholder="Enter Username 2" required>
+    <input type="text" id="username3" placeholder="Enter Username 3" required>
+</form>
+<ul>
+    <li><button class="neon-text" id='backHome'>Back</a></button></li>
+    <li><button class="neon-text" id='Play'>Start Tournament</a></button></li>
+</ul>

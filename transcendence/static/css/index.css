@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+body {
+    font-family: 'Orbitron', sans-serif;
+    background: linear-gradient(to right, #ff9966, #ff5e62);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+#content {
+    text-align: bottom; /* Center align text */
+}
+
+h1 {
+    font-size: 2.5rem; /* H1 boyutunu küçültme */
+    margin-bottom: 20px; /* Başlığın altındaki boşluk */
+}
+
+.language-selector {
+    margin-top: 20px; /* Dil seçici ile butonlar arasına boşluk ekle */
+    z-index: 10; /* Diğer öğelerin üstünde görünmesini sağla */
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+button {
+    background-color: #f30a0a00;
+    border: none;
+    color: rgb(255, 255, 255);
+    padding: 10px 20px;
+    font-size: 2rem; /* Buton yazı boyutunu küçültme */
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #fcfcfc62;
+}

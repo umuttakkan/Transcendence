@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
-
 .neon-text {
     color: #37ff14;
     text-shadow:
@@ -8,7 +7,6 @@
       0 0 6px #39ff14,
       0 0 30px #39ff14;
 }
-
 body {
     font-family: 'Orbitron', sans-serif;
     background: linear-gradient(to right, #ff9966, #ff5e62);
@@ -20,13 +18,11 @@ body {
     height: 80vh; /* Daha az bir yükseklik belirleyin */
     flex-direction: column;
 }
-
 /* h1 {
     font-size: 5rem;
     margin-bottom: 20px;
     text-align: center;
 } */
-
 ul {
     list-style: none;
     padding: 0;
@@ -35,7 +31,6 @@ ul {
     justify-content: center; /* centers buttons horizontal */
     align-items: center; /* centers buttons horizontal */
 }
-
 button {
     background-color: #f30a0a00;
     border: none;
@@ -47,7 +42,6 @@ button {
     transition: background-color 0.3s ease;
     align-items: center;
 }
-
 #content {
     width: 40%; /* horizontal width */
     height: 90vh; /* 50 height of the screen (viewport height) */
@@ -57,7 +51,6 @@ button {
     align-items: center;
     justify-content: center;
 }
-
 .language-selector {
     position: fixed;
     bottom: 20px; /* 20px above from the bottom of the page */
@@ -68,26 +61,21 @@ button {
     gap: 10px; /* space/gap between Label n select */
     z-index: 10; /* makes it to be on top of everything */
 }
-
 .img {
     object-fit: cover;
     border-radius: 5px;
 }
-
 button:hover {
     background-color: #fcfcfc62;
     
 }
-
 button a {
     color: rgb(44, 241, 18);
     text-decoration: none;
 }
-
 button a:hover {
     text-decoration: underline;
 }
-
 ul li {
     display: inline-block;
 }

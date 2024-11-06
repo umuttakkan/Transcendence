@@ -66,7 +66,7 @@ const loadScript = async (scriptSrc) => {
         script.type = 'module';
         script.textContent = scriptText;
         document.body.appendChild(script);
-        if (scriptSrc.slice(11, -3) == "game" || scriptSrc.slice(11, -3) == "tournament" || scriptSrc.slice(11, -3) == "vs_mod" || scriptSrc.slice(11, -3) == "game_home" )
+        if (scriptSrc.slice(11, -3) == "game" || scriptSrc.slice(11, -3) == "tournament" || scriptSrc.slice(11, -3) == "vs_mod" || scriptSrc.slice(11, -3) == "game_home" || scriptSrc.slice(11, -3) == "login")
         {
             const link = document.createElement('link');
             link.rel = 'stylesheet';

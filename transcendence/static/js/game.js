@@ -49,6 +49,11 @@ let ballVelocity = new THREE.Vector3(ballSpeed, ballSpeed, 0);
 let moveLeftPaddleUp = false;
 let moveLeftPaddleDown = false;
 
+const leftPaddleInitialPosition = new THREE.Vector3(-4.5, 0, 0);
+const rightPaddleInitialPosition = new THREE.Vector3(4.5, 0, 0);
+const ballInitialPosition = new THREE.Vector3(0, 0, 0);
+const ballInitialVelocity = new THREE.Vector3(0.05, 0.05, 0);
+
 
 // Keyboard event listeners
 document.addEventListener('keydown', onKeyDown);
@@ -119,6 +124,7 @@ function moveBall() {
         document.getElementById('1_score').innerText = player1_score;
         document.getElementById('2_score').innerText = player2_score;
         const user1 = localStorage.getItem('username');
+        const user2 = localStorage.getItem('opponent');
         if(player1_score == 2) // will be 5 in final version
         {
             alert("Player 1 Wins");
@@ -177,21 +183,17 @@ function restartGame() {
     animate();
 }
 
-// Handle window resizing (unchanged)
-window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-});
+const controlsElement = document.querySelector('#controls');
 
 function hideControls() {
-    const controls = document.getElementById('controls');
-    controls.classList.add('hidden');
+    controlsElement.style.BackgroundColor = "0";
+    setTimeout(() => {
+        controlsElement.style.opacity = "0";
+        controlsElement.classList.add('hidden');
+    }, 4000);
 }
 
-window.addEventListener('load', () => {
-    setTimeout(hideControls, 3000); //disappear after 3 seconds
-});
+hideControls();
 
 function sendGameResult(score1, score2, user1Name, user2Name) {
     const data = {

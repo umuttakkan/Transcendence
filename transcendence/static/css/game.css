@@ -39,13 +39,6 @@ body {
   margin-bottom: 10px; /* space bwtween score and controls */
 }
 
-#controls {
-  font-size: 18px;
-  color: #a8a8a8;
-  opacity: 1; /* appears when game starts */
-  transition: opacity 1s ease-in-out; /* Fading slowly effect */
-}
-
 .profile-section ul {
     max-height: 300px;
     overflow-y: scroll;
@@ -140,3 +133,13 @@ button:hover {
 #playAgainButton:hover {
     background-color: #61dafb;
 }
+
+@media (max-width: 768px) {
+    #score {
+        font-size: 25px;
+    }
+    button, #playAgainButton {
+        font-size: 1rem;
+        padding: 10px 20px;
+    }
+ }
