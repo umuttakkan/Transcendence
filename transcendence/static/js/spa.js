@@ -71,6 +71,8 @@ const loadScript = async (scriptSrc) => {
             const link = document.createElement('link');
             link.rel = 'stylesheet';
             if (scriptSrc.slice(11, -3) == "tournament")
+                link.href = '/static/css/tournament_mod.css';
+            else if (scriptSrc.slice(11, -3) == "vs_mod")
                 link.href = '/static/css/vs_mod.css';
             else
             {
@@ -211,6 +213,15 @@ document.body.addEventListener('click', event => {
             // window.location.href = "home";
             event.preventDefault();
             history.pushState(null, null, "/home/");
+            handleLocation();
+        }
+    }
+    else if(path === "/tournament/"){
+        console.log("event : " , event.target.innerHTML);
+        if (event.target.innerHTML === "Back") {
+            // window.location.href = "home";
+            event.preventDefault();
+            history.pushState(null, null, "/game_home/");
             handleLocation();
         }
     }

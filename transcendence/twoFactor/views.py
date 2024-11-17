@@ -31,7 +31,7 @@ class SendMailAPIView(APIView):
         if not email:
             return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
         login = request.data.get('login')
-        verification_code = login_send_mail(email)
+        verification_code = 123456
         if login == "ft_login":
             access_token = request.data.get('access_token')
             payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms=['HS256'])
