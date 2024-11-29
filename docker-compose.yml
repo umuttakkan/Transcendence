@@ -1,0 +1,42 @@
+services:
+  backend:
+    build:
+      context: ./transcendence
+      dockerfile: Dockerfile
+    networks:
+      - default
+    depends_on:
+      - postgres
+
+  postgres:
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    container_name: postgres
+    networks:
+      - default
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    networks:
+      - default
+    ports:
+      - "443:443"
+    volumes:
+      - ./transcendence/static:/app/static
+    depends_on:
+      - backend
+
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  postgres_data:
+

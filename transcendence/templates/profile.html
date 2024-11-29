@@ -1,21 +1,41 @@
-<h1 data-translate="user_profile">User Profile</h1>
-    <div>
+<button id="homeButton" type="button" data-translate="home">Home</button>
+    
+<div class="profile-container">
+    <h1 data-translate="user_profile">User Profile</h1>
+    
+    <div class="profile-field">
         <label for="username" data-translate="username">Username:</label>
-        <span id="username">{{ username }}</span>
+        <span id="username"></span>
     </div>
-    <div>
+    
+    <div class="profile-field">
         <label for="email" data-translate="email">Email:</label>
-        <span id="email">{{ email }}</span>
+        <span id="email"></span>
     </div>
-    <div>
-        <label for="name" data-translate="name">Name:</label>
-        <span id="name">{{ name }}</span>
+    
+    <div class="profile-field">
+        <label for="name" data-translate="name_profile">Name:</label>
+        <span id="name"></span>
     </div>
-    <div>
-        <label for="lastname" data-translate="lastname">Surname:</label>
-        <span id="lastname">{{ lastname }}</span>
+    
+    <div class="profile-field">
+        <label for="lastname" data-translate="last_name">Surname:</label>
+        <span id="lastname"></span>
     </div>
-    <div>
+    
+    <div class="profile-field">
         <label for="phone" data-translate="phone">Phone:</label>
-        <span id="phone">{{ phone }}</span>
+        <span id="phone"></span>
     </div>
+
+    <div class="profile-field toggle-container">
+        <label for="2fa-toggle" data-translate="two_factor_auth">Two-Factor Authentication:</label>
+        <label class="toggle-switch">
+            <input type="checkbox" id="2fa-toggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+    <div class="profile-field">
+        <button id="deleteAccountButton" type="button" class="delete-account-btn" data-translate="delete_account">Hesabımı Sil</button>
+    </div>
+</div>

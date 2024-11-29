@@ -1,39 +1,48 @@
-# Variables
-VENV_DIR = venv
-PYTHON = $(VENV_DIR)/bin/python
-PIP = $(VENV_DIR)/bin/pip
-DJANGO_MANAGE = $(PYTHON) transcendence/manage.py
+# Colors
+DEF_COLOR = \033[0;39m
+GREEN = \033[0;92m
+BLUE = \033[0;94m
+RED = \033[0;91m
+WHITE = \033[0;97m
 
-# Create virtual environment
-$(VENV_DIR)/bin/activate: requirements.txt
-	python3 -m venv $(VENV_DIR)
-	$(PIP) install --upgrade pip
-	$(PIP) install -r requirements.txt
+NAME = Transcendence
 
-# Run server
-runserver: $(VENV_DIR)/bin/activate
-	$(DJANGO_MANAGE) runserver
+# Docker commands
+up:
+	@echo "$(BLUE)Starting $(NAME) containers...$(DEF_COLOR)"
+	@mkdir -p ./data/PostgreSQL ./data/NginX
+	@docker-compose -f docker-compose.yml up -d --build
+	@echo "$(GREEN)Containers are up and running.$(DEF_COLOR)"
 
-# Run migrations
-migrate: $(VENV_DIR)/bin/activate
-	$(DJANGO_MANAGE) makemigrations
-	$(DJANGO_MANAGE) migrate
+down:
+	@echo "$(BLUE)Stopping $(NAME) containers...$(DEF_COLOR)"
+	@docker-compose -f docker-compose.yml down
+	@echo "$(RED)Containers stopped.$(DEF_COLOR)"
 
-# Collect static files
-collectstatic: $(VENV_DIR)/bin/activate
-	$(DJANGO_MANAGE) collectstatic --noinput
-
-# Run tests
-test: $(VENV_DIR)/bin/activate
-	$(DJANGO_MANAGE) test
-
-# Clean up .pyc files
 clean:
-	find . -name "*.pyc" -exec rm -f {} \;
-	find . -name "__pycache__" -exec rm -rf {} \;
+	@echo "$(RED)Removing containers, volumes, and orphans...$(DEF_COLOR)"
+	@docker-compose -f docker-compose.yml down -v --remove-orphans
+	@echo "$(RED)Removing unused Docker images...$(DEF_COLOR)"
+	@docker rmi -f $$(docker images -q)
+	@rm -rf ./data/PostgreSQL ./data/NginX
+	@echo "$(GREEN)Clean completed.$(DEF_COLOR)"
 
-# Clean up virtual environment
-fclean: clean
-	rm -rf $(VENV_DIR)
+# Check Docker status
+status:
+	@echo "$(BLUE)Checking running Docker containers...$(DEF_COLOR)"
+	@docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}"
+	@echo "$(GREEN)Docker status checked.$(DEF_COLOR)"
 
-.PHONY: runserver migrate makemigrations install collectstatic test clean clean-venv
+# Display Docker version and info
+info:
+	@echo "$(BLUE)Docker version:$(DEF_COLOR)"
+	@docker version
+	@echo "$(BLUE)Docker system information:$(DEF_COLOR)"
+	@docker info
+
+# Restart containers
+restart:
+	@echo "$(BLUE)Restarting $(NAME) containers...$(DEF_COLOR)"
+	@make down
+	@make up
+	@echo "$(GREEN)Containers restarted successfully.$(DEF_COLOR)"

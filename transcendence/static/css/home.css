@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Electrolize&display=swap');
+body {
+    font-family: 'Electrolize', sans-serif;
+    background: linear-gradient(to right, #ff9966, #ff5e62);
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar */
+.navbar {
+    box-shadow: 0 2px 5px rgba(211, 10, 10, 0.1);
+    border-bottom: 2px solid #ff5e62;
+}
+
+.bg-white {
+    background-color: #f9f9f994 !important;
+}
+
+/* Navbar Brand */
+.navbar-brand {
+    font-size: 2rem;
+    font-weight: bold !important;
+    color: #ff5e62 !important;
+    pointer-events: none; /* Tıklanabilirliği devre dışı bırakır */
+}
+
+/* Ana İçerik */
+.card {
+    background: linear-gradient(to right, #ff9966, #ff5e62);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 900px;
+    height: 900px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-left: 200px;
+}
+
+.card h1 {
+    font-size: 4rem;
+    color: #333;
+    font-weight: bold;
+}
+
+.home-text {
+    color: #212529; /* Daha koyu ve kontrastlı bir renk */
+    font-size: 1.3rem;
+    line-height: 1.6;
+    text-align: justify; /* Yazıyı hizalı yapar */
+}
+
+.list-group-item {
+    font-size: 1.2rem;
+    padding: 10px 15px;
+    background-color: #f9f9f9a8;
+    margin-top: 7px;
+}
+
+.list-group-item:hover {
+    background-color: #e9ecef;
+}
+
+/* GIF Konteyner */
+.gif-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+/* GIF'in boyutunu büyütmek için */
+.gif-container img.gif-large {
+    max-width: 100%; /* Tam genişlik için ayarlanabilir */
+    height: 200px; /* Sabit yükseklik ayarlandı */
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease; /* Hover animasyonu */
+}
+
+.gif-container img.gif-large:hover {
+    transform: scale(1.05); /* Hover durumunda GIF büyür */
+}
+
+/* Dil Seçici */
+.language-container {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}

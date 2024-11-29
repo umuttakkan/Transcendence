@@ -3,15 +3,15 @@ from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.core.exceptions import ValidationError
-from django.core.validators import validate_email
+from django.core.validators import validate_email, MinLengthValidator
+from django.core.validators import RegexValidator
 
-class BaseUserManager(BaseUserManager):
+class CustomUserManager(BaseUserManager):
     def email_validator(self, email):
         try:
             validate_email(email)
         except ValidationError:
             raise ValidationError('Invalid email address')
-            
     def create_user(self, email, name, lastname, username, password, phone,**extra_fields):
         if email:
             email = self.normalize_email(email)
@@ -24,8 +24,11 @@ class BaseUserManager(BaseUserManager):
             raise ValueError('Lastname is required')
         if not username:
             raise ValueError('Username is required')
+        if not phone:
+            raise ValueError('Phone is required')
 
         user = self.model(username=username, email=email, name=name, lastname=lastname, phone=phone)
+
         user.set_password(password)
         user.save()
         print("bakalim sifreye ne oluyor")
@@ -34,27 +37,30 @@ class BaseUserManager(BaseUserManager):
         return user
 
 class User(AbstractBaseUser):
-    name = models.CharField(max_length=100)
-    lastname = models.CharField(max_length=100)
-    username = models.CharField(max_length=100, unique=True)
-    email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=10)
-    last_login = models.DateTimeField(null=True, blank=True)
+    name = models.CharField(validators=[MinLengthValidator(2)],max_length=100, error_messages={'min_length': 'Name must be at least 2 characters long'})
+    lastname = models.CharField(validators=[MinLengthValidator(2)],max_length=100, error_messages={'min_length': 'Lastname must be at least 2 characters long'})
+    username = models.CharField(validators=[MinLengthValidator(2)],max_length=100, unique=True, error_messages={'min_length': 'Username must be at least 2 characters long'})
     is_active = models.BooleanField(default=True)
+    last_login = models.DateTimeField(auto_now=True)
+    email = models.EmailField(unique=True)
+    phone = models.CharField(
+        max_length=10,
+        validators=[
+            RegexValidator(
+                regex=r'^\d{10}$',
+                message="Phone number must be exactly 10 digits."
+            )
+        ],
+    )    
+    rank = models.IntegerField(default=420)
+    two_factor_enabled = models.BooleanField(default=False)
 
-    # USERNAME_FIELD = 'username'
     USERNAME_FIELD = 'email'
     
-    objects = BaseUserManager()
-    
-    def clean(self):
-        if len(self.phone) < 10:
-            raise ValidationError('Phone number must be at least 10 characters long')
-        if not self.email.endswith('@example.com'):
-            raise ValidationError('Email must end with @example.com')
-        
+    objects = CustomUserManager()
+
     def __str__(self):
-        return self.email
+        return self.email 
 
 class VerificationCode(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -62,14 +68,18 @@ class VerificationCode(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField()
     used = models.BooleanField(default=False)
-    
 
     def get_code(self):
         return self.code
+
     def is_valid(self):
         return not self.used and timezone.now() < self.expires_at
 
+    def mark_as_used(self):
+        self.used = True
+        self.save()
+
     def save(self, *args, **kwargs):
         if not self.expires_at and not self.pk:
-            self.expires_at = timezone.now() + timedelta(minutes=1)
+            self.expires_at = timezone.now() + timedelta(minutes=10)
         super().save(*args, **kwargs)

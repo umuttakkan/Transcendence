@@ -1,16 +1,25 @@
+document.getElementById('Language').style.display = 'block';
 const logoutButton = document.getElementById('logoutButton');
 const profileButton = document.getElementById('profileButton');
 logoutButton.addEventListener('click', logoutAction);
 profileButton.addEventListener('click', profileButtonAction);
 
-const refresh_token = localStorage.getItem('refresh_token');
-const access_token = localStorage.getItem('access_token');
+const refresh_token = getCookie('refresh_token');
+const access_token = getCookie('access_token');
+const url = String(window.location.origin);
 
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+}
 
 async function logoutAction(event) {
-	event.preventDefault();
+	if (event)
+		event.preventDefault();
 	try{
-		const response = await fetch('http://127.0.0.1:8000/accounts/logout/', {
+		const response = await fetch(url+'/accounts/logout/', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -21,29 +30,20 @@ async function logoutAction(event) {
 			}),
 		});
 		if(response.status === 200) {
-			console.log('Logout successful');
-			localStorage.removeItem('access_token');
-			localStorage.removeItem('refresh_token');
-			localStorage.removeItem('2fa');
-			localStorage.removeItem('currentLanguage');
-			localStorage.removeItem('language');
-			localStorage.removeItem('selectedLanguage');
-			localStorage.removeItem('login');
+			document.cookie = "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure;";
+			document.cookie = "refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure;";
+			localStorage.clear()
 			sessionStorage.clear();
 			window.history.pushState({}, "", "/login/");
 			handleLocation();
 		}
 		else if (response.status === 401) {
-			console.log('Access token süresi geçmiş');
 			const newAccessToken = await refreshAccessToken();
-			console.log(newAccessToken);
 			if (newAccessToken) {
-				accessToken = newAccessToken
-				localStorage.setItem('access_token', accessToken);
-				return logoutAction(event);
+				document.cookie = `access_token=${newAccessToken}; path=/; Secure; SameSite=Lax;`;
+                await performLogoutWithNewToken(newAccessToken, refresh_token);
 			}
 			else {
-				console.error('Access token yenilenemedi');
 				logout();
 				return;
 			}
@@ -59,25 +59,40 @@ async function logoutAction(event) {
 	}
 }
 
-function profileButtonAction(event) {
-	window.history.pushState({}, "", "/me/");
-	handleLocation();
-}
+async function performLogoutWithNewToken(newAccessToken, refresh_token) {
+    try {
+        const response = await fetch(url+'/accounts/logout/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${newAccessToken}`,
+            },
+            body: JSON.stringify({
+                refresh_token: refresh_token,
+            }),
+        });
 
-const gameButton = document.getElementById('gameButton');
-gameButton.addEventListener('click', gameButtonAction);
-
-function gameButtonAction(event) {
-	event.preventDefault();
-	window.history.pushState({}, "", "/game_home/");
-	handleLocation();
+        if(response.status === 200) {
+			document.cookie = "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure;";
+			document.cookie = "refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure;";
+			localStorage.clear();
+			sessionStorage.clear();
+			window.history.pushState({}, "", "/login/");
+			handleLocation();
+		} else {
+            logout();
+        }
+    } catch(error) {
+        console.error('Logout request failed after token refresh:', error);
+        logout();
+    }
 }
 
 async function refreshAccessToken() {
-	const refreshToken = localStorage.getItem('refresh_token');
+	const refreshToken = getCookie('refresh_token');
 	
 	try {
-		const response = await fetch('http://127.0.0.1:8000/api/token/refresh/', {
+		const response = await fetch(url+'/api/token/refresh/', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -90,8 +105,6 @@ async function refreshAccessToken() {
 		const data = await response.json();
   
 		if (data.access) {
-			console.log('Access token yenilendi');
-			console.log(data.access); 
 			return data.access 
 		} else {
 			console.error("Refresh token suresi dolmus");
@@ -100,24 +113,32 @@ async function refreshAccessToken() {
 		console.error('Token yenileme hatası:', error);
 	}
   }
-  
-async function logout() 
-{
-  const language = localStorage.getItem('currentLanguage') || 'en';
-  if (language === 'tr')
-      alert('Lutfen tekrar giris yapin. Giris sayfasina yonlendiriliyorsunuz.');
-  else if (language === 'en')
-      alert('Please login again. You are being redirected to the login page.');
-  else if (language === 'fr')
-      alert('Veuillez vous reconnecter. Vous êtes redirigé vers la page de connexion.');
-  console.log('Logout successful');
-  localStorage.removeItem('access_token');
-  localStorage.removeItem('refresh_token');
-  localStorage.removeItem('2fa');
-  localStorage.removeItem('currentLanguage');
-  localStorage.removeItem('language');
-  localStorage.removeItem('selectedLanguage');
-  sessionStorage.clear();
-  window.history.pushState({}, "", "/login/");
-  handleLocation();
+
+async function logout() {
+	document.cookie = "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure;";
+	document.cookie = "refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure;";
+	localStorage.clear();
+	sessionStorage.clear();
+	if (language === 'tr')
+		alert('Lütfen tekrar giriş yapın. Giriş sayfasına yönlendiriliyorsunuz.');
+	else if (language === 'en')
+		alert('Please login again. You are being redirected to the login page.1');
+	else if (language === 'fr')
+		alert('Veuillez vous reconnecter. Vous êtes redirigé vers la page de connexion.');
+    window.history.pushState({}, "", "/login/");
+    handleLocation();
+}
+
+function profileButtonAction(event) {
+	window.history.pushState({}, "", "/me/");
+	handleLocation();
+}
+
+const gameButton = document.getElementById('gameButton');
+gameButton.addEventListener('click', gameButtonAction);
+
+function gameButtonAction(event) {
+	event.preventDefault();
+	window.history.pushState({}, "", "/game_home/");
+	handleLocation();
 }

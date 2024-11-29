@@ -1,59 +1,58 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Electrolize&display=swap');
 body {
-    font-family: 'Orbitron', sans-serif;
-    background: linear-gradient(to right, #ff9966, #ff5e62);
+    font-family: 'Electrolize', sans-serif;
     margin: 0;
     padding: 0;
+    background: linear-gradient(to right, #ff9966, #ff5e62); /* Gradyan arka plan */
+    min-height: 100vh;
+}
+
+/* Sadece başlangıç ekranı için `#content` özel stili */
+.content-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
     flex-direction: column;
-}
-
-/* #content {
-    text-align: bottom;  Center align text 
-} */
-
-h1 {
-    font-size: 2.5rem; /* H1 boyutunu küçültme */
-    margin-bottom: 20px; /* Başlığın altındaki boşluk */
-}
-
-.language-selector {
-    margin-top: 20px; /* Dil seçici ile butonlar arasına boşluk ekle */
-    z-index: 10; /* Diğer öğelerin üstünde görünmesini sağla */
-}
-
-/* .language-selector {
-    position: fixed;
-    bottom: 20px; 
-    right: 20px; 
-    margin-top: 0; 
-    z-index: 10; 
-} */
-
-/* ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    gap: 10px;
     justify-content: center;
     align-items: center;
+    height: 100vh; /* Tam ekran yüksekliği */
+    background: transparent;
 }
 
-button {
-    background-color: #f30a0a00;
-    border: none;
-    color: rgb(255, 255, 255);
+/* `Sayfa Yükleniyor` yazısı ve spinner */
+.content-container h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.spinner-border {
+    color: #007bff;
+}
+
+/* Dil seçici için stiller */
+.language-container {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
     padding: 10px 20px;
-    font-size: 2rem; Buton yazı boyutunu küçültme
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-button:hover {
-    background-color: #fcfcfc62;
-} */
+#language-selector {
+    font-size: 1rem;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+/* Diğer sayfalar için `#content`'in varsayılan görünümü */
+#content:not(.content-container) {
+    display: block;
+    padding: 0;
+    margin: 0;
+    height: auto;
+    background: none;
+}

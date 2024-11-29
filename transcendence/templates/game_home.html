@@ -1,15 +1,17 @@
-<button id="homeButton" type="button">Home</button>
-<h1>Welcome To The Game Section, {{ user.username }}!</h1>
+<button id="homeButton" type="button" data-translate="home">Home</button>
+<h1 id="username1">
+    <span data-translate="welcome_game_section">Welcome To The Game Section,</span> {{ user.username }}!
+</h1>
 <div class="modes-section">
-    <h2>Pong Game</h2>
+    <h2 data-translate="pong_game">Pong Game</h2>
+    <p ><span data-translate="ranking">Ranking:</span> {{ user.rank }}</p>
     <ul>
-        <button id="vsButton" type="button">Vs Mode</button>
-        <button id="tournamentButton" type="button">Tournament Mode</button>
+        <button id="vsButton" type="button" data-translate="vs_mode">Vs Mode</button>
+        <button id="tournamentButton" type="button" data-translate="tournament_mode">Tournament Mode</button>
     </ul>
 </div>
 <div class="profile-section">
-    <h2>Your Game History</h2>
+    <h2 data-translate="your_game_history">Your Game History</h2>
     <ul id='fokingamehistory'>
     </ul>
 </div>
-

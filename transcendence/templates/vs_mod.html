@@ -1,73 +1,105 @@
 {% load static %}
-<body>
-    <h1 class="neon-text">Vs Mode</h1>
-    <div class="my_container">
-        <div>
-            <img src="{% static 'images/vs_mode.jpg' %}" alt="Pong Game" class="game-image">
-        </div>
-        <div>
-            <form class="vs-form">
-                <label for="player2Name">İkinci Oyuncu İsmi:</label>
-                <input type="text" id="player2Name" name="player2Name" value="AI" required>
+<button id="homeButton" type="button" data-translate="home">Home</button>
+
+<div class="vs-mode-container container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+            <div class="vs-mode-content">
+                <h1 class="neon-text text-center mb-4" data-translate="vs_mode">Vs Modu</h1>
                 
-                <label for="aiMode">İkinci Oyuncu AI Olsun mu?</label>
-                <select id="aiMode" name="aiMode">
-                    <option value="no">Hayır</option>
-                    <option value="yes" selected>Evet</option>
-                </select>
-                
-                <div id="difficultyOptions">
-                    <label for="aiDifficulty">AI Zorluk Seviyesi:</label>
-                    <select id="aiDifficulty" name="aiDifficulty">
-                        <option value="easy">Basit</option>
-                        <option value="medium" selected>Orta</option>
-                        <option value="hard">Zor</option>
-                    </select>
-                </div>
-                
-                <label for="gameMode">Oyun Modu:</label>
-                <select id="gameMode" name="gameMode">
-                    <option value="standard">Standart</option>
-                    <option value="unpredictable">Unpredictable</option>
-                    <option value="accelerating">Accelerating</option>
-                </select>
-                
-                <label for="paddleSize">Raket Boyutu:</label>
-                <select id="paddleSize" name="paddleSize">
-                    <option value="large">Büyük</option>
-                    <option value="medium" selected>Orta</option>
-                    <option value="small">Küçük</option>
-                </select>
-                
-                <label for="ballSpeed">Top Hızı:</label>
-                <select id="ballSpeed" name="ballSpeed">
-                    <option value="slow">Yavaş</option>
-                    <option value="medium" selected>Orta</option>
-                    <option value="fast">Hızlı</option>
-                </select>
-            </form>
+                <div class="row align-items-center">
+                    <!-- Image Column -->
+                    <div class="col-12 col-md-6 mb-4 mb-md-0">
+                        <div class="image-section">
+                            <img src="{% static 'images/vs_mode.jpg' %}" alt="Pong Game" class="vs-mode-image img-fluid rounded shadow">
+                        </div>
+                    </div>
+
+                    <!-- Form Column -->
+                    <div class="col-12 col-md-6 form-section">
+                        <!-- <div class=""> -->
+                            <form id="gameOptionsForm" class="needs-validation" novalidate>
+                                <!-- İkinci Oyuncu İsmi -->
+                                <div class="mb-4">
+                                    <label for="player2Name" class="form-label" data-translate="ikinci_oyuncu">İkinci Oyuncu İsmi:</label>
+                                    <input type="text" id="player2Name" name="player2Name"
+                                           class="form-control" required>
+                                </div>
+
+                                <!-- AI Modu -->
+                                <div class="mb-4">
+                                    <label for="aiMode" class="form-label" data-translate="ai_mode">İkinci Oyuncu AI Olsun mu?</label>
+                                    <select id="aiMode" name="aiMode" class="form-select">
+                                        <option value="no" data-translate="no">Hayır</option>
+                                        <option value="yes" data-translate="yes">Evet</option>
+                                    </select>
+                                </div>
+
+                                <!-- AI Zorluk -->
+                                <div id="difficultyOptions" class="mb-4">
+                                    <label for="aiDifficulty" class="form-label" data-translate="ai_difficulty">AI Zorluk Seviyesi:</label>
+                                    <select id="aiDifficulty" name="aiDifficulty" class="form-select">
+                                        <option value="easy" data-translate="easy">Basit</option>
+                                        <option value="medium" selected data-translate="medium">Orta</option>
+                                        <option value="hard" data-translate="hard">Zor</option>
+                                    </select>
+                                </div>
+
+                                <!-- Oyun Modu -->
+                                <div class="mb-4">
+                                    <label for="gameMode" class="form-label" data-translate="game_mode">Oyun Modu:</label>
+                                    <select id="gameMode" name="gameMode" class="form-select">
+                                        <option value="standard" data-translate="standard">Standart</option>
+                                        <option value="unpredictable" data-translate="unpredictable">Tahmin Edilemez</option>
+                                        <option value="accelerating" data-translate="accelerating">Hızlanan</option>
+                                    </select>
+                                </div>
+
+                                <!-- Raket Boyutu -->
+                                <div class="mb-4">
+                                    <label for="paddleSize" class="form-label" data-translate="paddle_size">Raket Boyutu:</label>
+                                    <select id="paddleSize" name="paddleSize" class="form-select">
+                                        <option value="large" data-translate="large">Büyük</option>
+                                        <option value="medium" selected data-translate="medium">Orta</option>
+                                        <option value="small" data-translate="small">Küçük</option>
+                                    </select>
+                                </div>
+
+                                <!-- Top Hızı -->
+                                <div class="mb-4">
+                                    <label for="ballSpeed" class="form-label" data-translate="ball_speed">Top Hızı:</label>
+                                    <select id="ballSpeed" name="ballSpeed" class="form-select">
+                                        <option value="slow" data-translate="slow">Yavaş</option>
+                                        <option value="medium" selected data-translate="medium">Orta</option>
+                                        <option value="fast" data-translate="fast">Hızlı</option>
+                                    </select>
+                                </div>
+
+                                
+                                <!-- Buttons -->
+                                <div class="d-flex justify-content-between gap-3 mt-4">
+                                    <button type="button" id="backHome" class="btn btn-secondary flex-grow-1" data-translate="back">
+                                        <i class="bi bi-house-fill"></i> Geri
+                                    </button>
+                                    <button type="submit" id="Play" class="btn btn-primary flex-grow-1" data-translate="play">
+                                        <i class="bi bi-play-fill"></i> Oyuna Başla
+                                    </button>
+                                </div>
+                            </form>
+                            <!-- </div> -->
+                        </div>
+                    </div>
+                    <p class="text-center mt-3">
+                        <small class="text-control" data-translate="game_settings">
+                            <span class="title" data-translate="controls">Game Controls</span><br>
+                            <span class="player2" data-translate="move1">Player1: Press 'A' to move up, 'S' to move down.</span>
+                            <span class="details" data-translate="move2">Player2: Press 'K' to move up, 'L' to move down.</span>
+                        </small>
+                    </p>
+            </div>
         </div>
     </div>
-    
-    <div class="button-container">
-        <button class="neon-button" id='backHome'>Back</button>
-        <button class="neon-button" id='Play'>Start Tournament</button>
-    </div>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const aiModeSelect = document.getElementById('aiMode');
-            const difficultyOptions = document.getElementById('difficultyOptions');
 
-            function updateDifficultyVisibility() {
-                difficultyOptions.style.display = aiModeSelect.value === 'yes' ? 'block' : 'none';
-            }
-
-            aiModeSelect.addEventListener('change', updateDifficultyVisibility);
-
-            // Initial call to set correct visibility
-            updateDifficultyVisibility();
-        });
-    </script>
-</body>
-</html>
+<div id='username' style="display: none;">{{user.username}}</div>

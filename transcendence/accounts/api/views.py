@@ -1,156 +1,215 @@
 import jwt
-from rest_framework.generics import GenericAPIView
-from accounts.api.serializers import LoginSerializer, RegistrationSerializer, VerificationCodeSerializer, ProfileSerializer, TokenRefreshSerializer
-from accounts.models import User, VerificationCode
-from rest_framework import generics
-from rest_framework_simplejwt.views import TokenObtainPairView
-from django.conf import settings
 from datetime import datetime, timedelta
-from rest_framework.views import APIView
-
-from django.contrib.auth import login as django_login
-from django.contrib.auth import logout
-from rest_framework import status
-from rest_framework.response import Response
 from django.utils import timezone
-
-import requests
-
-from django.shortcuts import render
+from django.conf import settings
 from django.shortcuts import get_object_or_404
-
+from django.core.mail import send_mail
+from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView, CreateAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.exceptions import AuthenticationFailed
+from accounts.models import User, VerificationCode
+from accounts.api.serializers import (
+    LoginSerializer,
+    RegistrationSerializer,
+    VerificationCodeSerializer,
+    ProfileSerializer
+)
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
+from rest_framework.permissions import AllowAny
+from django.contrib.auth import login, logout
+import random
 import json
+from rest_framework_simplejwt.views import TokenRefreshView
+from Pong.models import Match, GamePlayHistory
+from django.db.models import Q
 
-class RegistrationAPIView(generics.CreateAPIView):
-    queryset = None
+def login_send_mail(email):
+    verification_code = random.randint(100000, 999999)
+    try:
+        send_mail(
+            'Login Verification Code',
+            f'Your verification code is {verification_code} (valid for 10 minutes)',
+            settings.EMAIL_HOST_USER,
+            [email],
+            fail_silently=False,
+        )
+        return verification_code
+    except Exception as e:
+        print(f'Email sending failed for {email}: {e}')
+        return 0
+
+
+def validate_verification_code(code):
+    verification = VerificationCode.objects.filter(code=code, used=False, expires_at__gt=timezone.now()).first()
+    if verification and verification.is_valid():
+        verification.mark_as_used()
+        return verification.user
+    return None
+
+
+def get_user_from_token(token):
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        user = User.objects.filter(id=payload['user_id']).first()
+        return user
+    except jwt.ExpiredSignatureError:
+        raise AuthenticationFailed('Token expired')
+    except jwt.InvalidTokenError:
+        raise AuthenticationFailed('Invalid token')
+
+
+class RegistrationAPIView(CreateAPIView):
     serializer_class = RegistrationSerializer
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'message': 'Success registration'}, status=status.HTTP_201_CREATED)
-        return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'Success registration'}, status=201)
+        return Response({'error': serializer.errors}, status=400)
 
-class LoginAPIView(generics.CreateAPIView):
-    queryset = None
+
+class LoginAPIView(CreateAPIView):
     serializer_class = LoginSerializer
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data, context={'request': request})
         if serializer.is_valid():
             user = serializer.validated_data
-            user_data = None
-            # access_token = create_access_token(user)
-            # refresh_token = create_refresh_token(user)
-            refresh_token = RefreshToken.for_user(user)
-            access_token = refresh_token.access_token
-            verification = VerificationCode.objects.filter(user=user, used=False, expires_at__gt=timezone.now()).first()
-            
-            django_login(request, user)
-
-            if verification and verification.is_valid():
-                verification_code = verification.get_code()
-                print('Verification code is valid')
-                print(verification_code)
+            if user.two_factor_enabled:
+                verification = VerificationCode.objects.filter(user=user, used=False, expires_at__gt=timezone.now()).first()
+                if not verification or not verification.is_valid():
+                    verification_code = login_send_mail(user.email)
+                    if verification_code == 0:
+                        return Response({'error': 'Mail not sent'}, status=500)
+                    VerificationCode.objects.create(user=user, code=verification_code)
+                login(request, user)
+                return Response({'username': user.username, 'twoFa': True}, status=200)
             else:
-                print('Verification code is not valid')
-                response = requests.post("http://localhost:8000/twoFactor/sendMail/", json={'email': user.email})
-                if response.status_code == 200:
-                    verification_code = response.json().get('verification_code')
-                    user_data = get_object_or_404(User, email=user.email)
-                    verify = VerificationCode.objects.create(user=user_data, code=verification_code)
-                    verify.save()
-                    print(verification_code)
-                    print("asd")
-                else:
-                    return Response({'error': 'Mail not sent'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-                
-            return Response({
-                'refresh_token': str(refresh_token),
-                'access_token': str(access_token),
-                'username': user_data.username,
-            }, status=status.HTTP_200_OK)
-        return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+                refresh_token = RefreshToken.for_user(user)
+                access_token = refresh_token.access_token
+                login(request, user)
+                return Response({
+                    'refresh_token': str(refresh_token),
+                    'access_token': str(access_token)
+                }, status=200)
+        return Response({'error': serializer.errors}, status=400)
 
-class VerifyAPIView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
-    queryset = None
+
+class VerifyAPIView(CreateAPIView):
     serializer_class = VerificationCodeSerializer
-    print("girdi123213")
+
     def post(self, request):
-        print("girdi1111")
         serializer = self.serializer_class(data=request.data)
-        print(serializer)
         if serializer.is_valid():
-            user_data = serializer.validated_data
-            code = user_data['code']
-            print(f"Received code: {code}")
-            verification = VerificationCode.objects.filter(code=code, used=False, expires_at__gt=timezone.now()).first()
-            
-            print(f"Verification object: {verification}")
-            if verification:
-                if verification.is_valid():
-                    print("girdi2")
-                    verification.used = True
-                    verification.save()
-                    return Response({'message': 'Success login'})
-                return Response({'error': 'Invalid code'}, status=status.HTTP_400_BAD_REQUEST)
-            return Response({'error': 'Code not found'}, status=status.HTTP_404_NOT_FOUND)
-        return Response({'error': 'Invalid data'}, status=status.HTTP_400_BAD_REQUEST)
+            code = serializer.validated_data['code']
+            user = validate_verification_code(code)
+            if user:
+                user.save()
+                refresh_token = RefreshToken.for_user(user)
+                access_token = refresh_token.access_token
+                return Response({
+                    'message': 'Success login',
+                    'refresh_token': str(refresh_token),
+                    'access_token': str(access_token)
+                }, status=200)
+            return Response({'error': 'Invalid or expired code'}, status=400)
+        return Response({'error': 'Invalid data'}, status=400)
 
-
-class ProfileAPIView(generics.ListAPIView):
+class ProfileAPIView(ListAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = User.objects.all()
     serializer_class = ProfileSerializer
-    print("ProfileAPIView.get çağrıldı")
 
     def get(self, request, *args, **kwargs):
         auth_header = request.headers.get('Authorization')
-        if not auth_header:
-            return Response({'error': 'Authorization header not found'}, status=status.HTTP_400_BAD_REQUEST)
-        print("get içindeyim")
-        if auth_header is None:
-            return Response({'error': 'Authorization header not found'}, status=status.HTTP_400_BAD_REQUEST)
-        print("buradayim")
-        try:
-            print("giridm")
-            access_token = auth_header.split(' ')[1]
-            payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms=['HS256'])
-            user = User.objects.filter(id=payload['user_id']).first()
-            if user is None:
-                return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        token = auth_header.split(' ')[1] if auth_header else None
+        user = get_user_from_token(token)
+        if user:
             return Response({
                 'name': user.name,
                 'lastname': user.lastname,
                 'username': user.username,
                 'email': user.email,
-                'phone': user.phone
-            }, status=status.HTTP_200_OK)
-        except jwt.ExpiredSignatureError:
-            return Response({'error': 'Token expired'}, status=status.HTTP_400_BAD_REQUEST)
-        except jwt.InvalidTokenError:
-            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+                'phone': user.phone,
+                'twoFa': user.two_factor_enabled
+            }, status=200)
+        return Response({'error': 'User not found'}, status=404)
 
-class LogoutAPIView(generics.CreateAPIView):
+class LogoutAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    queryset = None
-    serializer_class = None
-
     def post(self, request):
         try:
             data = json.loads(request.body)
             refresh_token = data.get('refresh_token')
-            token = RefreshToken(refresh_token)
-            token.blacklist()
+            try:
+                token = RefreshToken(refresh_token)
+                token.blacklist()
+            except TokenError:
+                    pass
+            if request.user and not request.user.is_anonymous:
+                request.user.save()
             logout(request)
-            response = Response({'message': 'Success logout'}, status=status.HTTP_200_OK)
+            request.session.flush()
+            response = Response({
+                'message': 'Başarıyla çıkış yapıldı.'
+            }, status=200)
             response.delete_cookie('sessionid')
+            response.delete_cookie('access_token')
+            response.delete_cookie('refresh_token')
             return response
         except Exception as e:
-            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+            print(f"Logout error: {str(e)}") 
+            return Response({
+                'error': 'Çıkış işlemi sırasında bir hata oluştu.'
+            }, status=400)
+
+class ResetCodeAPIView(APIView):
+    def post(self, request):
+        data = json.loads(request.body)
+        username = data.get('username')
+        user = User.objects.filter(username=username).first()
+        verification = VerificationCode.objects.filter(
+            user=user, 
+            used=False, 
+            expires_at__gt=timezone.now()
+        ).first()
+        if verification:
+            verification.used = True
+            verification.save()
+        verification_code = login_send_mail(user.email)
+        if verification_code == 0:
+            return Response({'error': 'Mail not sent'}, status=400)
+        VerificationCode.objects.create(user=user, code=verification_code)
+        return Response({'message': 'Verification code sent'}, status=200)
+
+class TwoFactorUpdateAPIView(UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ProfileSerializer
+
+    def put(self, request, *args, **kwargs):
+        user = request.user
+        twoFa = request.data.get('twoFa')
+        user.two_factor_enabled = twoFa
+        user.save()
+        return Response({'message': 'Two factor authentication updated'}, status=200)
+
+
+class DeleteAPIView(DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+        user = request.user
+        username = user.username
+
+        matches = Match.objects.filter(
+            Q(winnerName=username) | Q(loserName=username)
+        )
+        GamePlayHistory.objects.filter(match__in=matches).delete()
+        matches.delete()
+        user.delete()
+        return Response({'message': 'User deleted'}, status=200)
+

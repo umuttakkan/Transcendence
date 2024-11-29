@@ -1,0 +1,229 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+.neon-text {
+    color: #37ff14;
+    text-shadow:
+      0 0 1px #39ff14,
+      0 0 1px #39ff14,
+      0 0 6px #39ff14,
+      0 0 30px #39ff14;
+}
+
+body {
+    font-family: 'Orbitron', sans-serif;
+    background: linear-gradient(to right, #ff7e5f, #feb47b);
+    display: block;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    height: 80vh;
+}
+
+h1 {
+    font-size: 5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    margin-top: 100px;
+}
+
+.tournament-container {
+    padding: 20px;
+    /* max-width: 2000px; */
+    margin: 0 auto;
+    align-items: center;
+}
+
+.tournament-content {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: center;
+    margin-top: 60px;
+    gap: 30px;
+    max-height: 100%;
+}
+
+.image-section {
+    margin-top: 15px;
+    max-width: 1600px;
+    margin-bottom: 15px;
+    margin-left: 70px;
+    /* padding-left: 30px; */
+}
+
+.tournament-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin-left: 90px;
+}
+
+/* .mb-4 {
+    margin-bottom: 0.5rem !important;
+} */
+
+.form-section {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 2px solid #37ff14;
+    box-shadow: 0 0 8px rgba(57, 255, 20, 0.3);
+    border-radius: 10px;
+    padding: 1rem;
+    width: 730px;
+    height: auto;
+    margin-left: 80px;
+}
+
+/* Form controls styling */
+.form-control, .form-select {
+    font-family: 'Orbitron', sans-serif;
+    background-color: rgba(114, 113, 113, 0.288);
+    border: 1px solid #0e0e0e;
+    box-shadow: 0 0 8px rgba(57, 255, 20, 0.3);
+    border-radius: 8px;
+}
+
+.form-label {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.player1 {
+    background-color: rgba(114, 113, 113, 0.288) !important;
+    border: 1px solid #0e0e0e !important;
+}
+
+.mb-3 {
+    margin-bottom: 0.3rem;
+}
+
+.btn {
+    font-size: 1.2rem;
+    padding: 10px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    color: #37ff14;
+    transform: translateY(-2px);
+}
+
+.mt-4 {
+    margin-top: 1rem !important;
+}
+
+.btn-primary {
+    font-family: 'Orbitron', sans-serif;
+    background-color: transparent;
+    border: 1px solid #37ff14;
+    color: #37ff14;
+    text-shadow: 0 0 5px #040504;
+    box-shadow: 0 0 8px rgba(16, 49, 10, 0.3);
+    border-radius: 8px;
+}
+
+.btn-primary:hover {
+    background-color: #d6a587;
+    border-color: #37ff14;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    font-family: 'Orbitron', sans-serif;
+    background-color: transparent;
+    border: 1px solid #37ff14;
+    color: #37ff14;
+    text-shadow: 0 0 5px #040504;
+    box-shadow: 0 0 8px rgba(16, 49, 10, 0.3);
+    border-radius: 8px;
+}
+
+.btn-secondary:hover {
+    background-color: #d6a587;
+    border-color: #37ff14;
+    transform: translateY(-2px);
+}
+
+#homeButton {
+    position: absolute;
+    top: 10px;   /* 20px space from right */
+    left: 10px;  /* 20px space from left */
+    background-color: #ff5e62;
+    color: white;
+    border: none;
+    padding: 8px 13px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .tournament-container {
+        padding: 10px;
+    }
+    
+    .form-section {
+        padding: 15px;
+    }
+    
+    .neon-text {
+        font-size: 2rem;
+    }
+
+    #gameOptionsForm {
+        grid-template-columns: 1fr;
+    }
+
+    #gameOptionsForm > div {
+        margin-bottom: 0.5rem;
+    }
+}
+
+.text-control {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    color: #000000a4;
+    padding: 1px;
+    text-align: center;
+    margin-top: 1.3rem;
+}
+
+.text-control .rules {
+    color: #000000;
+    display: block;
+    margin-bottom: 1px;
+}
+
+.text-control .title {
+    display: block;
+    font-size: 1.2rem;
+    text-decoration: underline;
+    color: #39ff14;
+    margin-bottom: 1px !important;
+}
+
+.player2, .player1 {
+    display: block;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 1px !important;
+}
+
+.language-container {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}

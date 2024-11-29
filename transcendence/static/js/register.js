@@ -1,11 +1,12 @@
-
+const url = window.location.origin;
+document.getElementById('Language').style.display = 'block';
 
 const button = document.getElementById('registerButton');
 button.addEventListener('click', registerForm);
 
-function registerForm(event){
+
+async function registerForm(event){
 	event.preventDefault();
-	console.log('Form submitted');
 	const username = document.getElementById('username').value;
 	const firstName = document.getElementById('firstName').value;
 	const lastName = document.getElementById('lastName').value;
@@ -14,7 +15,6 @@ function registerForm(event){
 	const confirmPassword = document.getElementById('confirmPassword').value;
 	const phone = document.getElementById('phone').value;
 	const language = localStorage.getItem('currentLanguage') || 'en';
-
 	if (!username || !firstName || !lastName || !email || !password || !confirmPassword || !phone){
 		if (language === 'en')
 			alert('Please fill in all fields.');
@@ -22,6 +22,16 @@ function registerForm(event){
 			alert('Lütfen tüm alanları doldurun.');
 		else if (language === 'fr')
 			alert('Veuillez remplir tous les champs.');
+		return;
+	}
+	if (username === 'AI')
+	{
+		if (language === 'en')
+			alert('Username cannot be ai.');
+		else if (language === 'tr')
+			alert('Kullanici adiniz ai olamaz.');
+		else if (language === 'fr')
+			alert('Le nom d utilisateur ne peut pas être ai.');
 		return;
 	}
 
@@ -35,7 +45,7 @@ function registerForm(event){
 		return;
 	}
 
-	fetch('http://127.0.0.1:8000/accounts/register/', {
+	const response = await fetch(url+'/accounts/register/', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -50,76 +60,68 @@ function registerForm(event){
 			phone: phone,
 		}),
 	})
-	.then((response) => response.json())
-	.then((data) => {
-		console.log('123123');
-		console.log(data);
-		if (data.message =="Success registration") {
-			if (language === 'en')
-				alert('Registration successful. You can log in now. Redirecting to login page.');
-			else if (language === 'tr')
-				alert('Kayıt başarılı. Giriş yapabilirsiniz.Giris sayfasina yönlendiriliyorsunuz.');
-			else if (language === 'fr')
-				alert('Inscription réussie. Vous pouvez maintenant vous connecter. Redirection vers la page de connexion.');
-        	window.history.pushState({}, "", "/login/");
-			handleLocation();
-		} else 
-			ft_error(data);
-	})
-	.catch((error) => {
-		console.error('Error:', error);
-		alert('Bir hata oluştu. Lütfen tekrar deneyin.');
-	});
+	const data = await response.json();
+	if (data.message =="Success registration") {
+		if (language === 'en')
+			alert('Registration successful. You can log in now. Redirecting to login page.');
+		else if (language === 'tr')
+			alert('Kayıt başarılı. Giriş yapabilirsiniz.Giris sayfasina yönlendiriliyorsunuz.');
+		else if (language === 'fr')
+			alert('Inscription réussie. Vous pouvez maintenant vous connecter. Redirection vers la page de connexion.');
+		window.history.pushState({}, "", "/login/");
+		handleLocation();
+	}
+	else 
+		ft_error(data);
 }
 
 function ft_error(data)
 {
 	const language = localStorage.getItem('currentLanguage') || 'en';
-	console.log(data.error);
 	if (data.error.email)
 	{
 		if (language === 'en')
 			alert('Invalid email address.');
 		else if (language === 'tr')
-			alert('Geçersiz e-posta adresi.');
+			alert('Geçersiz veya kayıtlı e-posta adresi');
 		else if (language === 'fr')
 			alert('Adresse e-mail invalide.');
 	}
 	else if (data.error.password)
 	{
 		if(language === 'en')
-			alert('Invalid password.');
+			alert('Invalid password. Password length should be at least 8 characters. It should contain one uppercase letter, one lowercase letter, and one digit.');
 		else if(language ==='tr')
-			alert('Geçersiz parola.');
+			alert('Geçersiz parola. Şifre uzunluğu en az 8 karakter olmalıdır. Bir büyük harf, bir küçük harf ve bir rakam içermelidir.');
 		else if(language === 'fr')
-			alert('Mot de passe invalide.');
+			alert('Mot de passe invalide. La longueur du mot de passe doit être d au moins 8 caractères. Il doit contenir une lettre majuscule, une lettre minuscule et un chiffre.');
 	}
 	else if (data.error.username)
 	{
 		if(language === 'en')
-			alert('Invalid username.');
+			alert('Invalid username. It should be at least 2 characters.');
 		else if(language ==='tr')
-			alert('Geçersiz kullanıcı adı.');
+			alert('Geçersiz kullanıcı adı. En az 2 karakter olmalıdır.');
 		else if(language === 'fr')
-			alert('Nom d utilisateur invalide.');
+			alert('Nom d utilisateur invalide. Il doit comporter au moins 2 caractères.');
 	}
 	else if (data.error.name)
 	{
 		if(language === 'en')
-			alert('Invalid name.');
+			alert('Invalid name. It should be at least 2 characters.');
 		else if(language ==='tr')
-			alert('Geçersiz isim.');
+			alert('Geçersiz isim. En az 2 karakter olmalıdır.');
 		else if(language === 'fr')
-			alert('Nom invalide.');
+			alert('Nom invalide. Il doit comporter au moins 2 caractères.');
 	}
 	else if (data.error.lastname)
 	{
 		if(language === 'en')
-			alert('Invalid lastname.');
+			alert('Invalid lastname. It should be at least 2 characters.');
 		else if(language ==='tr')
-			alert('Geçersiz soyisim.');
+			alert('Geçersiz soyisim. En az 2 karakter olmalıdır.');
 		else if(language === 'fr')
-			alert('Nom invalide.');
+			alert('Nom invalide. Il doit comporter au moins 2 caractères.');
 	}
 	else if (data.error.phone)
 	{
@@ -130,5 +132,27 @@ function ft_error(data)
 		else if(language === 'fr')
 			alert('Numéro de téléphone invalide. Il doit comporter 10 chiffres sans 0 au début.');
 	}
+	else
+	{
+		console.log("else girdim",data);
+		if (data.error.non_field_errors[0] === "Registration is not allowed with a @student.42... email address reserved for 42 students.") {
+			if (language === 'en')
+				alert('Registration is not allowed with a @student.42... email address reserved for 42 students.');
+			else if (language === 'tr')
+				alert('42 öğrencileri için ayrılmış @student.42... e-posta adresi ile kayıt yapılamaz.');
+			else if (language === 'fr')
+				alert('L enregistrement n est pas autorisé avec une adresse e-mail @student.42... réservée aux étudiants de 42.');
+		}
+		else if (data.error.non_field_errors[0] === "Password must be at least 8 characters long" || 
+				 data.error.non_field_errors[0] === "Password must contain at least one uppercase letter" || 
+				 data.error.non_field_errors[0] === "Password must contain at least one lowercase letter" || 
+				 data.error.non_field_errors[0] === "Password must contain at least one digit") {
+			if (language === 'en')
+				alert('Invalid password. Password length should be at least 8 characters. It should contain one uppercase letter, one lowercase letter, and one digit.');
+			else if (language === 'tr')
+				alert('Geçersiz parola. Şifre uzunluğu en az 8 karakter olmalıdır. Bir büyük harf, bir küçük harf ve bir rakam içermelidir.');
+			else if (language === 'fr')
+				alert('Mot de passe invalide. La longueur du mot de passe doit être d au moins 8 caractères. Il doit contenir une lettre majuscule, une lettre minuscule et un chiffre.');
+		}
+	}
 }
-// document.addEventListener('DOMContentLoaded', initRegister);

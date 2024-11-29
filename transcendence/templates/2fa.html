@@ -1,7 +1,29 @@
-<h1 data-translate="two_factor_auth">Two-Factor Authentication</h1>
-<form id="2faForm" action='#'>
-	<label for="verification_code" data-translate="enter_code">Enter the verification code:</label>
-	<input type="text" id="code" required>
-	<button id="verifyButton" type="button" data-translate="verify">Verify</button>
-</form>
-<div id="error-message" class="error-message"></div>
+<div class="container d-flex align-items-center justify-content-center min-vh-100">
+    <div class="auth-container card shadow-lg border-0 p-4">
+        <h1 class="text-center mb-4" data-translate="two_factor_auth">Two-Factor Authentication</h1>
+        
+        <form id="2faForm" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label for="verification_code" class="form-label text-center w-100" data-translate="enter_code">
+                    Enter the 6-digit verification code
+                </label>
+                <div class="code-input">
+                    <input type="text" maxlength="1" pattern="\d" required>
+                    <input type="text" maxlength="1" pattern="\d" required>
+                    <input type="text" maxlength="1" pattern="\d" required>
+                    <input type="text" maxlength="1" pattern="\d" required>
+                    <input type="text" maxlength="1" pattern="\d" required>
+                    <input type="text" maxlength="1" pattern="\d" required>
+                </div>
+            </div>
+            <button id="verifyButton" type="button" class="btn btn-primary w-100 mt-3" data-translate="verify">
+                Verify Code
+            </button>
+        </form>
+        
+        
+        <div class="text-center mt-3">
+            <button type="button" id='resetCode' data-translate="reset_code">Didn't receive the code? Resend</button>
+        </div>
+    </div>
+</div>
